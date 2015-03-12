@@ -1,0 +1,33 @@
+{
+    "name": "herald-project/herald-client-client",
+    "description": "Herald client for PHP",
+    "keywords": ["herald", "email", "messages", "smtp", "templates", "mailgun", "mandrill"],
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Hongliang Wang",
+            "email": "h.wang@onatal.nl",
+            "role": "Developer"
+        },
+        {
+            "name": "Joost Faassen",
+            "email": "j.faassen@onatal.nl",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "e-mail": "support@linkorb.com",
+        "issues": "https://github.com/herald-project/herald-client-php/issues"
+    },
+    "require": {
+        "symfony/console": "~2.4",
+        "guzzlehttp/guzzle": "~4.2"
+    },
+    "bin": ["bin/herald-client"],
+    "autoload": {
+        "psr-4": {
+            "Herald\\Client\\": "src/"
+        }
+    }
+}
