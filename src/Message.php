@@ -8,7 +8,7 @@ class Message
     private $transportAccount;
     private $toAddress;
     private $data;
-    
+
     public function getMessageTemplate()
     {
         return $this->messageTemplate;
@@ -17,12 +17,14 @@ class Message
     public function setTemplate($template)
     {
         $this->messageTemplate = $template;
+
         return $this;
     }
 
     public function setTransportAccount($ta)
     {
         $this->transportAccount = $ta;
+
         return $this;
     }
 
@@ -38,6 +40,7 @@ class Message
     public function setToAddress($toAddress)
     {
         $this->toAddress = $toAddress;
+
         return $this;
     }
 
@@ -48,6 +51,7 @@ class Message
     public function setData($data)
     {
         $this->data = $data;
+
         return $this;
     }
 }
