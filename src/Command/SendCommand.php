@@ -81,7 +81,13 @@ class SendCommand extends Command
         if ($data = $input->getOption('data')) {
             $message->setData($data);
         }
-        $results = $c->send($message);
-        print_r($results);
+        // $results = $c->send($message);
+        // print_r($results);
+
+        if ($c->send($message)) {
+            $output->writeln('<info>Success!</info>');
+        } else {
+            $output->writeln('<warning>Failed!</warning>');
+        }
     }
 }

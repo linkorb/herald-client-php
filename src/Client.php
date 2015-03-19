@@ -43,9 +43,14 @@ class Client
         //echo $res->getStatusCode();
         //echo $res->getHeader('content-type');
         //echo $res->getBody();
+        
+        /*
         $data = $res->json();
         if ($data['numFound']>0) {
         }
         return true;
+        */
+
+        return ($res->getStatusCode() == 200);
     }
 }
