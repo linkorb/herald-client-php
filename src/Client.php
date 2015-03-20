@@ -7,28 +7,24 @@ use GuzzleHttp\Client as GuzzleClient;
 class Client
 {
     // private $baseurl = "http://www.herald.web";
-    private $baseurl = "http://localhost:8787";
-    private $apiPrefix = '/api/v1';
+    private $apiUrl = 'http://localhost:8787/api/v1';
     private $username;
     private $password;
-
-    public function __construct($username, $password)
+    
+    public function __construct($username, $password, $apiUrl = null)
     {
         $this->username = $username;
         $this->password = $password;
-    }
-    
-    public function setBaseUrl($baseurl)
-    {
-        $this->baseurl = $baseurl;
-        return $this;
+        if ($apiUrl !== null) {
+            $this->apiUrl = $apiUrl;
+        }
     }
 
     public function send(Message $message)
     {
         $guzzleclient = new GuzzleClient();
 
-        $url = $this->baseurl.$this->apiPrefix.'/send/';
+        $url = $this->apiUrl.'/send/';
         $url.= $message->getTransportAccount().'/';
         $url.= $message->getMessageTemplate().'/';
         $url.= '?to='.$message->getToAddress();

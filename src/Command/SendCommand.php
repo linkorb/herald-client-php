@@ -30,10 +30,10 @@ class SendCommand extends Command
                 'Password for the herald server'
             )
             ->addOption(
-                'baseurl',
+                'apiurl',
                 null,
                 InputOption::VALUE_REQUIRED,
-                'Base URL of the herald server'
+                'API URL of the herald server'
             )
             ->addOption(
                 'transportaccount',
@@ -64,11 +64,13 @@ class SendCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $c = new HeraldClient($input->getOption('username'), $input->getOption('password'));
+        $c = new HeraldClient(
+            $input->getOption('username'),
+            $input->getOption('password'),
+            ($input->getOption('apiurl') ? $input->getOption('apiurl') : null)
+        );
         $message = new Message();
-        if ($baseurl = $input->getOption('baseurl')) {
-            $c->setBaseUrl($baseurl);
-        }
+
         if ($template = $input->getOption('template')) {
             $message->setTemplate($template);
         }
@@ -81,8 +83,6 @@ class SendCommand extends Command
         if ($data = $input->getOption('data')) {
             $message->setData($data);
         }
-        // $results = $c->send($message);
-        // print_r($results);
 
         if ($c->send($message)) {
             $output->writeln('<info>Success!</info>');
