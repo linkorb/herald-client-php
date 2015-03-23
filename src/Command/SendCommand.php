@@ -67,15 +67,14 @@ class SendCommand extends Command
         $c = new HeraldClient(
             $input->getOption('username'),
             $input->getOption('password'),
-            ($input->getOption('apiurl') ? $input->getOption('apiurl') : null)
+            $input->getOption('apiurl'),
+            $input->getOption('transportaccount')
         );
+
         $message = new Message();
 
         if ($template = $input->getOption('template')) {
             $message->setTemplate($template);
-        }
-        if ($transportAccount = $input->getOption('transportaccount')) {
-            $message->setTransportAccount($transportAccount);
         }
         if ($toAddress = $input->getOption('to')) {
             $message->setToAddress($toAddress);
