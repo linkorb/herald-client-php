@@ -26,7 +26,7 @@ class Client
 
         $url = $this->apiUrl.'/send/';
         $url.= $this->transportAccount.'/';
-        $url.= $message->getMessageTemplate().'/';
+        $url.= $message->getTemplate().'/';
         $url.= '?to='.$message->getToAddress();
         // var_dump($url);die;
 

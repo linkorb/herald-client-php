@@ -2,14 +2,14 @@
 
 namespace Herald\Client;
 
-class Message
+class Message implements MessageInterface
 {
     private $messageTemplate;
     private $transportAccount;
     private $toAddress;
     private $data;
 
-    public function getMessageTemplate()
+    public function getTemplate()
     {
         return $this->messageTemplate;
     }
@@ -20,7 +20,7 @@ class Message
 
         return $this;
     }
-
+    /*
     public function setTransportAccount($ta)
     {
         $this->transportAccount = $ta;
@@ -32,6 +32,7 @@ class Message
     {
         return $this->transportAccount;
     }
+    */
 
     public function getToAddress()
     {
