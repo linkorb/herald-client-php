@@ -7,6 +7,7 @@ class Client implements MessageSenderInterface
 {
     // private $baseurl = "http://www.herald.web";
     // private $apiUrl = 'http://localhost:8787/api/v1';
+    private $apiUrl;
     private $username;
     private $password;
     private $transportAccount;

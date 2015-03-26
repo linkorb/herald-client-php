@@ -5,7 +5,7 @@ namespace Herald\Client;
 class Message implements MessageInterface
 {
     private $messageTemplate;
-    private $transportAccount;
+    // private $transportAccount;
     private $toAddress;
     private $data;
 
