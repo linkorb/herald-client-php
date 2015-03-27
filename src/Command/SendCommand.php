@@ -79,13 +79,22 @@ class SendCommand extends Command
             $message->setToAddress($toAddress);
         }
         if ($data = $input->getOption('data')) {
-            $message->setData($data);
+            $this->setDataFromString($data, $message);
         }
 
         if ($c->send($message)) {
             $output->writeln('<info>Success!</info>');
         } else {
             $output->writeln('<warning>Failed!</warning>');
+        }
+    }
+
+    private function setDataFromString($dataString, Message $message)
+    {
+        $pairs = explode(',', $dataString);
+        foreach ($pairs as $pair) {
+            $part = explode(':', $pair);
+            $message->setData(trim($part[0]), trim($part[1]));
         }
     }
 }

@@ -5,7 +5,6 @@ namespace Herald\Client;
 class Message implements MessageInterface
 {
     private $messageTemplate;
-    // private $transportAccount;
     private $toAddress;
     private $data;
 
@@ -20,19 +19,6 @@ class Message implements MessageInterface
 
         return $this;
     }
-    /*
-    public function setTransportAccount($ta)
-    {
-        $this->transportAccount = $ta;
-
-        return $this;
-    }
-
-    public function getTransportAccount()
-    {
-        return $this->transportAccount;
-    }
-    */
 
     public function getToAddress()
     {
@@ -45,14 +31,25 @@ class Message implements MessageInterface
         return $this;
     }
 
+    public function setData($key, $value)
+    {
+        $this->data[$key] = $value;
+
+        return $this;
+    }
+
     public function getData()
     {
         return $this->data;
     }
-    public function setData($data)
-    {
-        $this->data = $data;
 
-        return $this;
+    public function serializeData()
+    {
+        $o = '';
+        foreach ((array) $this->data as $key => $value) {
+            $o .= $key.':'.$value.',';
+        }
+
+        return substr($o, 0, -1);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Herald\Client;
 
 use GuzzleHttp\Client as GuzzleClient;
@@ -32,7 +33,7 @@ class Client implements MessageSenderInterface
         $res = $guzzleclient->post($url, [
             'auth' => [$this->username, $this->password],
             'body' => [
-                'data' => $message->getData(),
+                'data' => $message->serializeData(),
             ],
         ]);
         //echo $res->getStatusCode();

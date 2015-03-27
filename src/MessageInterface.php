@@ -9,5 +9,5 @@ interface MessageInterface
     public function getToAddress();
     public function setToAddress($toAddress);
     public function getData();
-    public function setData($data);
+    public function setData($key, $value);
 }
