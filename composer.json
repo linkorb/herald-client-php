@@ -1,5 +1,5 @@
 {
-    "name": "herald-project/herald-client-client",
+    "name": "herald-project/client-php",
     "description": "Herald client for PHP",
     "keywords": ["herald", "email", "messages", "smtp", "templates", "mailgun", "mandrill"],
     "license": "MIT",
