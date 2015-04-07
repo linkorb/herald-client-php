@@ -27,7 +27,7 @@ class Client implements MessageSenderInterface
 
         $url = $this->apiUrl.'/send/';
         $url .= $this->transportAccount.'/';
-        $url .= $message->getTemplate().'/';
+        $url .= $this->escapeTemplateName($message->getTemplate()).'/';
         $url .= '?to='.$message->getToAddress();
 
         $res = $guzzleclient->post($url, [
@@ -48,5 +48,10 @@ class Client implements MessageSenderInterface
         */
 
         return ($res->getStatusCode() == 200);
+    }
+
+    private function escapeTemplateName($templateName)
+    {
+        return str_replace('/', '___', $templateName);
     }
 }
