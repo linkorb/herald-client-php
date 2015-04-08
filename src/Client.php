@@ -6,12 +6,11 @@ use GuzzleHttp\Client as GuzzleClient;
 
 class Client implements MessageSenderInterface
 {
-    // private $baseurl = "http://www.herald.web";
-    // private $apiUrl = 'http://localhost:8787/api/v1';
     private $apiUrl;
     private $username;
     private $password;
     private $transportAccount;
+    private $templateNamePrefix = '';
 
     public function __construct($username, $password, $apiUrl, $transportAccount)
     {
@@ -21,13 +20,20 @@ class Client implements MessageSenderInterface
         $this->transportAccount = $transportAccount;
     }
 
+    public function setTemplateNamePrefix($prefix)
+    {
+        $this->templateNamePrefix = $prefix;
+
+        return $this;
+    }
+
     public function send(MessageInterface $message)
     {
         $guzzleclient = new GuzzleClient();
 
         $url = $this->apiUrl.'/send/';
         $url .= $this->transportAccount.'/';
-        $url .= $this->escapeTemplateName($message->getTemplate()).'/';
+        $url .= $this->patchTemplateName($message->getTemplate()).'/';
         $url .= '?to='.$message->getToAddress();
 
         $res = $guzzleclient->post($url, [
@@ -48,6 +54,11 @@ class Client implements MessageSenderInterface
         */
 
         return ($res->getStatusCode() == 200);
+    }
+
+    private function patchTemplateName($templateName)
+    {
+        return $this->escapeTemplateName($this->templateNamePrefix.$templateName);
     }
 
     private function escapeTemplateName($templateName)
