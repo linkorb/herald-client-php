@@ -24,9 +24,12 @@ class Message implements MessageInterface
     {
         return $this->toAddress;
     }
-    public function setToAddress($toAddress)
+    public function setToAddress($toAddress, $name = null)
     {
         $this->toAddress = $toAddress;
+        if ($name) {
+            $this->toAddress .= ':'.$name;
+        }
 
         return $this;
     }
