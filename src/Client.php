@@ -56,6 +56,26 @@ class Client implements MessageSenderInterface
         return ($res->getStatusCode() == 200);
     }
 
+    public function checkTemplate($templateName)
+    {
+        $guzzleclient = new GuzzleClient();
+
+        $url = $this->apiUrl.'/checktemplate/'.$templateName;
+
+        $res = $guzzleclient->post($url, [
+            'auth' => [$this->username, $this->password],
+        ]);
+
+        $body = $res->getBody();
+        if ($body) {
+            if ($body->read(2) == 'ok') {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private function patchTemplateName($templateName)
     {
         return $this->escapeTemplateName($this->templateNamePrefix.$templateName);
