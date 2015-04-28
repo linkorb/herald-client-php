@@ -60,7 +60,7 @@ class Client implements MessageSenderInterface
     {
         $guzzleclient = new GuzzleClient();
 
-        $url = $this->apiUrl.'/checktemplate/'.$templateName;
+        $url = $this->apiUrl.'/checktemplate/'.$this->patchTemplateName($templateName);
 
         $res = $guzzleclient->post($url, [
             'auth' => [$this->username, $this->password],
