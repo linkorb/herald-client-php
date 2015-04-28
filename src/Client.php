@@ -58,6 +58,11 @@ class Client implements MessageSenderInterface
 
     public function checkTemplate($templateName)
     {
+        return $this->templateExists($templateName);
+    }
+
+    public function templateExists($templateName)
+    {
         $guzzleclient = new GuzzleClient();
 
         $url = $this->apiUrl.'/checktemplate/'.$this->patchTemplateName($templateName);

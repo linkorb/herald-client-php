@@ -52,7 +52,7 @@ class CheckTemplateCommand extends Command
             null
         );
 
-        if ($c->checkTemplate($input->getArgument('template'))) {
+        if ($c->templateExists($input->getArgument('template'))) {
             $output->writeln('<info>Success!</info>');
         } else {
             $output->writeln('<error>Failed!</error>');
