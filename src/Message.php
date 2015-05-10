@@ -7,6 +7,7 @@ class Message implements MessageInterface
     private $messageTemplate;
     private $toAddress;
     private $data;
+    private $attachments = array();
 
     public function getTemplate()
     {
@@ -54,5 +55,24 @@ class Message implements MessageInterface
         }
 
         return substr($o, 0, -1);
+    }
+
+    public function setAttachment($filePath, $fileName = null)
+    {
+        if (!file_exists($filePath)) {
+            throw new \Exception('Attachment not found: '.$filePath);
+        }
+        if ($fileName === null) {
+            $info = pathinfo($filePath);
+            $fileName = $info['basename'];
+        }
+        $this->attachments []= array('path' => $filePath, 'name' => $fileName);
+
+        return $this;
+    }
+
+    public function getAttachments()
+    {
+        return $this->attachments;
     }
 }
