@@ -54,7 +54,7 @@ class Message implements MessageInterface
         foreach ($attachments as $a) {
             $data['attachments'][] = array(
                 'name' => $a['name'],
-                'data' => file_get_contents($a['path']),
+                'data' => base64_encode(file_get_contents($a['path'])),
             );
         }
 
