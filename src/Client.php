@@ -2,8 +2,8 @@
 
 namespace Herald\Client;
 
+// use GuzzleHttp\Post\PostFile;
 use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHttp\Post\PostFile;
 
 class Client implements MessageSenderInterface
 {
@@ -37,15 +37,16 @@ class Client implements MessageSenderInterface
         $url .= $this->patchTemplateName($message->getTemplate()).'/';
         $url .= '?to='.$message->getToAddress();
 
-        $body = array('data' => $message->serializeData());
+        $body = $message->serializeData();
 
-        $attachments = $message->getAttachments();
-        foreach ($attachments as $a) {
-            $body[] = new PostFile($a['name'], fopen($a['path'], 'r'));
-        }
+        // $attachments = $message->getAttachments();
+        // foreach ($attachments as $a) {
+        //     $body[] = new PostFile($a['name'], fopen($a['path'], 'r'));
+        // }
 
         $res = $guzzleclient->post($url, [
             'auth' => [$this->username, $this->password],
+            'headers' => ['content-type' => 'application/json'],
             'body' => $body,
         ]);
         //echo $res->getStatusCode();

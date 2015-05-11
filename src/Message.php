@@ -49,12 +49,21 @@ class Message implements MessageInterface
 
     public function serializeData()
     {
-        $o = '';
-        foreach ((array) $this->data as $key => $value) {
-            $o .= $key.':'.$value.',';
+        $data = array('values' => $this->data, 'attachments' => array());
+        $attachments = $this->getAttachments();
+        foreach ($attachments as $a) {
+            $data['attachments'][] = array(
+                'name' => $a['name'],
+                'data' => file_get_contents($a['path']),
+            );
         }
 
-        return substr($o, 0, -1);
+        return json_encode($data);
+        // $o = '';
+        // foreach ((array) $this->data as $key => $value) {
+        //     $o .= $key.':'.$value.',';
+        // }
+        // return substr($o, 0, -1);
     }
 
     public function setAttachment($filePath, $fileName = null)
