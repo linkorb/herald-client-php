@@ -28,13 +28,13 @@ class Client implements MessageSenderInterface
         return $this;
     }
 
-    public function send(MessageInterface $message)
+    public function send(MessageInterface $message, $skipNamePrefix = false)
     {
         $guzzleclient = new GuzzleClient();
 
         $url = $this->apiUrl.'/send/';
         $url .= $this->transportAccount.'/';
-        $url .= $this->patchTemplateName($message->getTemplate()).'/';
+        $url .= $this->patchTemplateName($message->getTemplate(), $skipNamePrefix).'/';
         $url .= '?to='.$message->getToAddress();
 
         $body = $message->serializeData();
@@ -68,11 +68,11 @@ class Client implements MessageSenderInterface
         return $this->templateExists($templateName);
     }
 
-    public function templateExists($templateName)
+    public function templateExists($templateName, $skipNamePrefix = false)
     {
         $guzzleclient = new GuzzleClient();
 
-        $url = $this->apiUrl.'/checktemplate/'.$this->patchTemplateName($templateName);
+        $url = $this->apiUrl.'/checktemplate/'.$this->patchTemplateName($templateName, $skipNamePrefix);
 
         $res = $guzzleclient->post($url, [
             'auth' => [$this->username, $this->password],
@@ -88,9 +88,13 @@ class Client implements MessageSenderInterface
         return false;
     }
 
-    private function patchTemplateName($templateName)
+    private function patchTemplateName($templateName, $skipNamePrefix = false)
     {
-        return $this->escapeTemplateName($this->templateNamePrefix.$templateName);
+        if ($skipNamePrefix) {
+            return $this->escapeTemplateName($templateName);
+        } else {
+            return $this->escapeTemplateName($this->templateNamePrefix.$templateName);
+        }
     }
 
     private function escapeTemplateName($templateName)
