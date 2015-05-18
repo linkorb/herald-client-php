@@ -8,6 +8,8 @@ class Message implements MessageInterface
     private $toAddress;
     private $data;
     private $attachments = array();
+    private $subject;
+    private $body;
 
     public function getTemplate()
     {
@@ -35,6 +37,30 @@ class Message implements MessageInterface
         return $this;
     }
 
+    public function getSubject()
+    {
+        return $this->subject;
+    }
+
+    public function setSubject($subject)
+    {
+        $this->subject = $subject;
+
+        return $this;
+    }
+
+    public function getBody()
+    {
+        return $this->body;
+    }
+
+    public function setBody($body)
+    {
+        $this->body = $body;
+
+        return $this;
+    }
+
     public function setData($key, $value)
     {
         $this->data[$key] = $value;
@@ -49,7 +75,12 @@ class Message implements MessageInterface
 
     public function serializeData()
     {
-        $data = array('values' => $this->data, 'attachments' => array());
+        $data = array(
+            'values' => $this->data,
+            'attachments' => array(),
+            'subject' => $this->subject,
+            'body' => $this->body,
+        );
         $attachments = $this->getAttachments();
         foreach ($attachments as $a) {
             $data['attachments'][] = array(
