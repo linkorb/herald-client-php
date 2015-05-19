@@ -37,28 +37,11 @@ class Client implements MessageSenderInterface
         $url .= $this->patchTemplateName($message->getTemplate(), $skipNamePrefix).'/';
         $url .= '?to='.$message->getToAddress();
 
-        $body = $message->serializeData();
-
-        // $attachments = $message->getAttachments();
-        // foreach ($attachments as $a) {
-        //     $body[] = new PostFile($a['name'], fopen($a['path'], 'r'));
-        // }
-
         $res = $guzzleclient->post($url, [
             'auth' => [$this->username, $this->password],
             'headers' => ['content-type' => 'application/json'],
-            'body' => $body,
+            'body' => $message->serializeData(),
         ]);
-        //echo $res->getStatusCode();
-        //echo $res->getHeader('content-type');
-        //echo $res->getBody();
-
-        /*
-        $data = $res->json();
-        if ($data['numFound']>0) {
-        }
-        return true;
-        */
 
         return ($res->getStatusCode() == 200);
     }
