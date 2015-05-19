@@ -73,7 +73,7 @@ class Message implements MessageInterface
         return $this->data;
     }
 
-    public function serializeData($skipAttachments = fales)
+    public function serializeData($skipAttachments = false)
     {
         $data = array(
             'values' => $this->data,
