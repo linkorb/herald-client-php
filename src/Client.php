@@ -77,7 +77,7 @@ class Client implements MessageSenderInterface
             'body' => $message->serializeData(true),
         ]);
 
-        return $res->getBody();
+        return json_decode($res->getBody());
     }
 
     public function checkTemplate($templateName)
