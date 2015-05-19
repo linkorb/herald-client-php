@@ -73,7 +73,7 @@ class Message implements MessageInterface
         return $this->data;
     }
 
-    public function serializeData()
+    public function serializeData($skipAttachments = fales)
     {
         $data = array(
             'values' => $this->data,
@@ -81,12 +81,15 @@ class Message implements MessageInterface
             'subject' => $this->subject,
             'body' => $this->body,
         );
-        $attachments = $this->getAttachments();
-        foreach ($attachments as $a) {
-            $data['attachments'][] = array(
-                'name' => $a['name'],
-                'data' => base64_encode(file_get_contents($a['path'])),
-            );
+
+        if (!$skipAttachments) {
+            $attachments = $this->getAttachments();
+            foreach ($attachments as $a) {
+                $data['attachments'][] = array(
+                    'name' => $a['name'],
+                    'data' => base64_encode(file_get_contents($a['path'])),
+                );
+            }
         }
 
         return json_encode($data);

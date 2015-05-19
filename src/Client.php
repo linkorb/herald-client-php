@@ -63,6 +63,23 @@ class Client implements MessageSenderInterface
         return ($res->getStatusCode() == 200);
     }
 
+    public function preview(MessageInterface $message, $skipNamePrefix = false)
+    {
+        $guzzleclient = new GuzzleClient();
+
+        $url = $this->apiUrl.'/preview/';
+        $url .= $this->patchTemplateName($message->getTemplate(), $skipNamePrefix).'/';
+        $url .= '?to='.$message->getToAddress();
+
+        $res = $guzzleclient->post($url, [
+            'auth' => [$this->username, $this->password],
+            'headers' => ['content-type' => 'application/json'],
+            'body' => $message->serializeData(true),
+        ]);
+
+        return $res->getBody();
+    }
+
     public function checkTemplate($templateName)
     {
         return $this->templateExists($templateName);
