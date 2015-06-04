@@ -12,6 +12,7 @@ class Client implements MessageSenderInterface
     private $password;
     private $transportAccount;
     private $templateNamePrefix = '';
+    private $toAddressOverride = null;
 
     public function __construct($username, $password, $apiUrl, $transportAccount)
     {
@@ -28,6 +29,13 @@ class Client implements MessageSenderInterface
         return $this;
     }
 
+    public function setToAddressOverride($address)
+    {
+        $this->toAddressOverride = $address;
+
+        return $this;
+    }
+
     public function send(MessageInterface $message, $skipNamePrefix = false)
     {
         $guzzleclient = new GuzzleClient();
@@ -35,7 +43,7 @@ class Client implements MessageSenderInterface
         $url = $this->apiUrl.'/send/';
         $url .= $this->transportAccount.'/';
         $url .= $this->patchTemplateName($message->getTemplate(), $skipNamePrefix).'/';
-        $url .= '?to='.$message->getToAddress();
+        $url .= '?to='.($this->toAddressOverride ? $this->toAddressOverride : $message->getToAddress());
 
         $res = $guzzleclient->post($url, [
             'auth' => [$this->username, $this->password],
