@@ -11,6 +11,17 @@ class Message implements MessageInterface
     private $subject;
     private $body;
 
+    public function __construct($templateName = null, $toAddress = null, $toName = null)
+    {
+        if ($templateName) {
+            $this->setTemplate($templateName);
+        }
+
+        if ($toAddress) {
+            $this->setToAddress($toAddress, $toName);
+        }
+    }
+
     public function getTemplate()
     {
         return $this->messageTemplate;
