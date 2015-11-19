@@ -109,4 +109,56 @@ class Client implements MessageSenderInterface
     {
         return str_replace('/', '___', $templateName);
     }
+    
+    
+    public function getMessages()
+    {
+
+        $guzzleclient = new GuzzleClient();
+
+        $url = $this->apiUrl.'/messages';
+
+        $res = $guzzleclient->post($url, [
+            'auth' => [$this->username, $this->password],
+        ]);
+
+        $body = $res->getBody();
+        if ($body) {
+            if ($body->read(2) == 'ok') {
+                return true;
+            }
+        }
+        $content = (string)$body;
+        $data = json_decode($content, true);
+        //print_r($data);
+        
+        $messages = array();
+        $templates = array();
+        $layouts = array();
+        
+        foreach($data['items'] as $m) {
+            $message = new Message();
+            $message->setId($m['id']);
+            $message->setUuid($m['uuid']);
+            $message->setUser($m['user']);
+            $message->setStamp($m['stamp']);
+            $message->setStatus($m['status']);
+            $message->setFromAddress($m['fromAddress']);
+            $message->setFromName($m['fromName']);
+            $message->setTo($m['to']);
+            $message->setCc($m['cc']);
+            $message->setBcc($m['bcc']);
+            $message->setSubject($m['subject']);
+            if (!isset($templates[(string)$m['template']['id']])) {
+                $template = new Template();
+                $template->setId($m['template']['id']);
+                $template->setCode($m['template']['code']);
+                $templates[(string)$m['template']['id']] = $template;
+            }
+            $message->setTemplate($templates[(string)$m['template']['id']]);
+            $messages[] = $message;
+        }
+
+        return $messages;
+    }
 }
