@@ -23,5 +23,6 @@ $application = new Application('Herald client', '0.0.1');
 $application->setCatchExceptions(true);
 $application->add(new \Herald\Client\Command\SendCommand());
 $application->add(new \Herald\Client\Command\MessageListCommand());
+$application->add(new \Herald\Client\Command\MessageGetCommand());
 $application->add(new \Herald\Client\Command\CheckTemplateCommand());
 $application->run();

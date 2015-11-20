@@ -133,32 +133,75 @@ class Client implements MessageSenderInterface
         //print_r($data);
         
         $messages = array();
-        $templates = array();
-        $layouts = array();
         
         foreach($data['items'] as $m) {
-            $message = new Message();
-            $message->setId($m['id']);
-            $message->setUuid($m['uuid']);
-            $message->setUser($m['user']);
-            $message->setStamp($m['stamp']);
-            $message->setStatus($m['status']);
-            $message->setFromAddress($m['fromAddress']);
-            $message->setFromName($m['fromName']);
-            $message->setTo($m['to']);
-            $message->setCc($m['cc']);
-            $message->setBcc($m['bcc']);
-            $message->setSubject($m['subject']);
-            if (!isset($templates[(string)$m['template']['id']])) {
-                $template = new Template();
-                $template->setId($m['template']['id']);
-                $template->setCode($m['template']['code']);
-                $templates[(string)$m['template']['id']] = $template;
-            }
-            $message->setTemplate($templates[(string)$m['template']['id']]);
+            $message = $this->arrayToMessage($m);
             $messages[] = $message;
         }
 
         return $messages;
     }
+    
+    public function getMessageById($messageId)
+    {
+
+        $guzzleclient = new GuzzleClient();
+
+        $url = $this->apiUrl . '/messages/' . $messageId;
+
+        $res = $guzzleclient->post($url, [
+            'auth' => [$this->username, $this->password],
+        ]);
+
+        $body = $res->getBody();
+        if ($body) {
+            if ($body->read(2) == 'ok') {
+                return true;
+            }
+        }
+        $content = (string)$body;
+        $data = json_decode($content, true);
+        //print_r($data);
+        
+        $message = $this->arrayToMessage($data);
+
+        return $message;
+    }
+    
+    private function arrayToMessage($m)
+    {
+        $message = new Message();
+        $message->setId($m['id']);
+        $message->setUuid($m['uuid']);
+        $message->setUser($m['user']);
+        $message->setStamp($m['stamp']);
+        $message->setStatus($m['status']);
+        $message->setFromAddress($m['fromAddress']);
+        $message->setFromName($m['fromName']);
+        $message->setTo($m['to']);
+        $message->setCc($m['cc']);
+        $message->setBcc($m['bcc']);
+        $message->setSubject($m['subject']);
+
+        if (isset($m['template'])) {
+            $template = new Template();
+            $template->setId($m['template']['id']);
+            $template->setUuid($m['template']['uuid']);
+            $template->setCode($m['template']['code']);
+            $template->setUser($m['template']['user']);
+            $template->setStatus($m['template']['status']);
+            $template->setFromAddress($m['template']['fromAddress']);
+            $template->setFromName($m['template']['fromName']);
+            $template->setTo($m['template']['to']);
+            $template->setCc($m['template']['cc']);
+            $template->setBcc($m['template']['bcc']);
+            $template->setBody($m['template']['body']);
+            $template->setBodyMarkup($m['template']['bodyMarkup']);
+
+            $template = new Layout();
+            $message->setTemplate($template);
+        }
+        return $message;
+    }
+
 }
