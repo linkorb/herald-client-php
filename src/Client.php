@@ -238,8 +238,13 @@ class Client implements MessageSenderInterface
         if (is_string($addresses)) {
             // old format json string, parse to array
             if ($addresses[0]!='[') {
-                // Expecting a json array
-                throw new RuntimeException("Unexpected address list: " . $addresses);
+                // Expecting a json array, assuming single address
+                $address = new Address();
+                //todo: parse in id, uuid and type if set
+                $address->setIdentifier($addresses);
+                $address->setName('');
+                $address->setType('email');
+                return array($address);
             }
             $addresses = json_decode($addresses, true);
         }
