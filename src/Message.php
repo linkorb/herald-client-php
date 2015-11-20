@@ -27,7 +27,7 @@ class Message implements MessageInterface
         return $this->messageTemplate;
     }
 
-    public function setTemplate(Template $template)
+    public function setTemplate($template)
     {
         $this->messageTemplate = $template;
 
