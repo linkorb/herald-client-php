@@ -4,6 +4,7 @@ namespace Herald\Client;
 
 // use GuzzleHttp\Post\PostFile;
 use GuzzleHttp\Client as GuzzleClient;
+use RuntimeException;
 
 class Client implements MessageSenderInterface
 {
@@ -178,30 +179,80 @@ class Client implements MessageSenderInterface
         $message->setStatus($m['status']);
         $message->setFromAddress($m['fromAddress']);
         $message->setFromName($m['fromName']);
-        $message->setTo($m['to']);
-        $message->setCc($m['cc']);
-        $message->setBcc($m['bcc']);
+
+        $addresses = $this->parseAddresses($m['to']);
+        $message->setTo($addresses);
+
+        $addresses = $this->parseAddresses($m['cc']);
+        $message->setCc($addresses);
+        
+        $addresses = $this->parseAddresses($m['bcc']);
+        $message->setBcc($addresses);
+        
         $message->setSubject($m['subject']);
 
         if (isset($m['template'])) {
+            $t = $m['template'];
             $template = new Template();
-            $template->setId($m['template']['id']);
-            $template->setUuid($m['template']['uuid']);
-            $template->setCode($m['template']['code']);
-            $template->setUser($m['template']['user']);
-            $template->setStatus($m['template']['status']);
-            $template->setFromAddress($m['template']['fromAddress']);
-            $template->setFromName($m['template']['fromName']);
-            $template->setTo($m['template']['to']);
-            $template->setCc($m['template']['cc']);
-            $template->setBcc($m['template']['bcc']);
-            $template->setBody($m['template']['body']);
-            $template->setBodyMarkup($m['template']['bodyMarkup']);
+            $template->setId($t['id']);
+            //$template->setUuid($m['template']['uuid']);
+            $template->setCode($t['code']);
+            $template->setUser($t['user']);
+            $template->setStatus($t['status']);
+            $template->setFromAddress($t['fromEmail']);
+            $template->setFromName($t['fromName']);
 
-            $template = new Layout();
+            $addresses = $this->parseAddresses($t['cc']);
+            $template->setCc($addresses);
+
+            $addresses = $this->parseAddresses($t['bcc']);
+            $template->setBcc($addresses);
+
+            $template->setBody($t['body']);
+            $template->setBodyMarkup($t['bodyMarkup']);
+
+            if (isset($t['layout'])) {
+                $l = $t['layout'];
+                $layout = new Layout();
+                $layout->setId($l['id']);
+                $layout->setCode($l['code']);
+                $layout->setBody($l['body']);
+                $template->setLayout($layout);
+            }
             $message->setTemplate($template);
         }
         return $message;
     }
-
+    
+    /*
+     * Current server returns a JSON string, not actual array data
+     * This method detects strings and decodes them
+     * Then it instantiates a new Address object for every item and returns
+     * an array of Address objects
+     */
+    private function parseAddresses($addresses)
+    {
+        if (!$addresses) {
+            return array();
+        }
+        if (is_string($addresses)) {
+            // old format json string, parse to array
+            if ($addresses[0]!='[') {
+                // Expecting a json array
+                throw new RuntimeException("Unexpected address list: " . $addresses);
+            }
+            $addresses = json_decode($addresses, true);
+        }
+        
+        $res = array();
+        foreach ($addresses as $a) {
+            $address = new Address();
+            //todo: parse in id, uuid and type if set
+            $address->setIdentifier($a['identifier']);
+            $address->setName($a['name']);
+            $address->setType('email');
+            $res[] = $address;
+        }
+        return $res;
+    }
 }

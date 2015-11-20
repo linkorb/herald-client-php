@@ -2,7 +2,7 @@
 
 namespace Herald\Client;
 
-class Template
+class Layout
 {
     private $id;
     
@@ -96,85 +96,16 @@ class Template
         return $this;
     }
     
-    private $cc;
+    private $body;
     
-    public function getCc()
-    {
-        return $this->cc;
-    }
-    
-    public function setCc($cc)
-    {
-        $this->cc = $cc;
-        return $this;
-    }
-    
-    
-    private $bcc;
-    
-    public function getBcc()
-    {
-        return $this->bcc;
-    }
-    
-    public function setBcc($bcc)
-    {
-        $this->bcc = $bcc;
-        return $this;
-    }
-    
-    
-    
-    public function getSubject()
-    {
-        return $this->subject;
-    }
-
-    public function setSubject($subject)
-    {
-        $this->subject = $subject;
-
-        return $this;
-    }
-
     public function getBody()
     {
         return $this->body;
     }
-
+    
     public function setBody($body)
     {
         $this->body = $body;
-
         return $this;
     }
-    
-    private $bodyMarkup;
-    
-    public function getBodyMarkup()
-    {
-        return $this->bodyMarkup;
-    }
-    
-    public function setBodyMarkup($bodyMarkup)
-    {
-        $this->bodyMarkup = $bodyMarkup;
-        return $this;
-    }
-    
-    
-    private $layout;
-    
-    public function getLayout()
-    {
-        return $this->layout;
-    }
-    
-    public function setLayout(Layout $layout)
-    {
-        $this->layout = $layout;
-        return $this;
-    }
-    
-    
 }
