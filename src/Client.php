@@ -4,7 +4,6 @@ namespace Herald\Client;
 
 // use GuzzleHttp\Post\PostFile;
 use GuzzleHttp\Client as GuzzleClient;
-use RuntimeException;
 
 class Client implements MessageSenderInterface
 {
@@ -110,11 +109,9 @@ class Client implements MessageSenderInterface
     {
         return str_replace('/', '___', $templateName);
     }
-    
-    
+
     public function getMessages()
     {
-
         $guzzleclient = new GuzzleClient();
 
         $url = $this->apiUrl.'/messages';
@@ -129,26 +126,25 @@ class Client implements MessageSenderInterface
                 return true;
             }
         }
-        $content = (string)$body;
+        $content = (string) $body;
         $data = json_decode($content, true);
         //print_r($data);
-        
+
         $messages = array();
-        
-        foreach($data['items'] as $m) {
+
+        foreach ($data['items'] as $m) {
             $message = $this->arrayToMessage($m);
             $messages[] = $message;
         }
 
         return $messages;
     }
-    
+
     public function getMessageById($messageId)
     {
-
         $guzzleclient = new GuzzleClient();
 
-        $url = $this->apiUrl . '/messages/' . $messageId;
+        $url = $this->apiUrl.'/messages/'.$messageId;
 
         $res = $guzzleclient->post($url, [
             'auth' => [$this->username, $this->password],
@@ -160,15 +156,15 @@ class Client implements MessageSenderInterface
                 return true;
             }
         }
-        $content = (string)$body;
+        $content = (string) $body;
         $data = json_decode($content, true);
         //print_r($data);
-        
+
         $message = $this->arrayToMessage($data);
 
         return $message;
     }
-    
+
     private function arrayToMessage($m)
     {
         $message = new Message();
@@ -185,10 +181,10 @@ class Client implements MessageSenderInterface
 
         $addresses = $this->parseAddresses($m['cc']);
         $message->setCc($addresses);
-        
+
         $addresses = $this->parseAddresses($m['bcc']);
         $message->setBcc($addresses);
-        
+
         $message->setSubject($m['subject']);
 
         if (isset($m['template'])) {
@@ -221,9 +217,10 @@ class Client implements MessageSenderInterface
             }
             $message->setTemplate($template);
         }
+
         return $message;
     }
-    
+
     /*
      * Current server returns a JSON string, not actual array data
      * This method detects strings and decodes them
@@ -237,18 +234,19 @@ class Client implements MessageSenderInterface
         }
         if (is_string($addresses)) {
             // old format json string, parse to array
-            if ($addresses[0]!='[') {
+            if ($addresses[0] != '[') {
                 // Expecting a json array, assuming single address
                 $address = new Address();
                 //todo: parse in id, uuid and type if set
                 $address->setIdentifier($addresses);
                 $address->setName('');
                 $address->setType('email');
+
                 return array($address);
             }
             $addresses = json_decode($addresses, true);
         }
-        
+
         $res = array();
         foreach ($addresses as $a) {
             $address = new Address();
@@ -258,6 +256,7 @@ class Client implements MessageSenderInterface
             $address->setType('email');
             $res[] = $address;
         }
+
         return $res;
     }
 }

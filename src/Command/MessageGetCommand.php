@@ -51,8 +51,8 @@ class MessageGetCommand extends Command
             $input->getOption('apiurl'),
             null
         );
-        $messageId = (string)$input->getArgument('messageId');
-        
+        $messageId = (string) $input->getArgument('messageId');
+
         $messages = $c->getMessageById($messageId);
         print_r($messages);
     }

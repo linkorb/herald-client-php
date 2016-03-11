@@ -45,7 +45,7 @@ class MessageListCommand extends Command
             $input->getOption('apiurl'),
             null
         );
-        
+
         $messages = $c->getMessages();
         print_r($messages);
     }
