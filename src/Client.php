@@ -8,18 +8,24 @@ use GuzzleHttp\Client as GuzzleClient;
 class Client implements MessageSenderInterface
 {
     private $apiUrl;
+    private $baseUrl;
     private $username;
     private $password;
     private $transportAccount;
     private $templateNamePrefix = '';
     private $toAddressOverride = null;
+    private $account;
+    private $library;
 
-    public function __construct($username, $password, $apiUrl, $transportAccount)
+    public function __construct($username, $password, $apiUrl, $account, $library, $transportAccount)
     {
         $this->username = $username;
         $this->password = $password;
         $this->apiUrl = $apiUrl;
+        $this->account = $account;
+        $this->library = $library;
         $this->transportAccount = $transportAccount;
+        $this->baseUrl = $apiUrl.'/'.$account.'/'.$library;
     }
 
     public function setTemplateNamePrefix($prefix)
@@ -40,9 +46,9 @@ class Client implements MessageSenderInterface
     {
         $guzzleclient = new GuzzleClient();
 
-        $url = $this->apiUrl.'/send/';
+        $url = $this->baseUrl.'/send/';
         $url .= $this->transportAccount.'/';
-        $url .= $this->patchTemplateName($message->getTemplate(), $skipNamePrefix).'/';
+        $url .= $this->patchTemplateName($message->getTemplate(), $skipNamePrefix);
         $url .= '?to='.($this->toAddressOverride ? $this->toAddressOverride : $message->getToAddress());
 
         $res = $guzzleclient->post($url, [
@@ -58,8 +64,8 @@ class Client implements MessageSenderInterface
     {
         $guzzleclient = new GuzzleClient();
 
-        $url = $this->apiUrl.'/preview/';
-        $url .= $this->patchTemplateName($message->getTemplate(), $skipNamePrefix).'/';
+        $url = $this->baseUrl.'/preview/';
+        $url .= $this->patchTemplateName($message->getTemplate(), $skipNamePrefix);
         $url .= '?to='.$message->getToAddress();
 
         $res = $guzzleclient->post($url, [
@@ -80,7 +86,7 @@ class Client implements MessageSenderInterface
     {
         $guzzleclient = new GuzzleClient();
 
-        $url = $this->apiUrl.'/checktemplate/'.$this->patchTemplateName($templateName, $skipNamePrefix);
+        $url = $this->baseUrl.'/checktemplate/'.$this->patchTemplateName($templateName, $skipNamePrefix);
 
         $res = $guzzleclient->post($url, [
             'auth' => [$this->username, $this->password],
