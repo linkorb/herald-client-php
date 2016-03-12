@@ -120,7 +120,7 @@ class Client implements MessageSenderInterface
     {
         $guzzleclient = new GuzzleClient();
 
-        $url = $this->apiUrl.'/messages';
+        $url = $this->baseUrl.'/messages';
 
         $res = $guzzleclient->post($url, [
             'auth' => [$this->username, $this->password],
@@ -150,7 +150,7 @@ class Client implements MessageSenderInterface
     {
         $guzzleclient = new GuzzleClient();
 
-        $url = $this->apiUrl.'/messages/'.$messageId;
+        $url = $this->baseUrl.'/messages/'.$messageId;
 
         $res = $guzzleclient->post($url, [
             'auth' => [$this->username, $this->password],
