@@ -36,3 +36,10 @@ if ($herald->templateExists('signup')) {
     $herald->send($message);
 }
 ```
+## CLI usage
+```sh
+#!/bin/sh
+
+common_param="--username=api_username --password=api_password --apiurl="http://localhost:8787/api/v2" --account=test --library=test"
+
+bin/herald-client list:list ${common_param}
