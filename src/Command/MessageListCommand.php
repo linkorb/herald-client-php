@@ -34,6 +34,18 @@ class MessageListCommand extends Command
                 InputOption::VALUE_REQUIRED,
                 'API URL of the herald server'
             )
+            ->addOption(
+                'account',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'Account for the herald server'
+            )
+            ->addOption(
+                'library',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'Library for the herald server'
+            )
         ;
     }
 
@@ -43,6 +55,8 @@ class MessageListCommand extends Command
             $input->getOption('username'),
             $input->getOption('password'),
             $input->getOption('apiurl'),
+            $input->getOption('account'),
+            $input->getOption('library'),
             null
         );
 
