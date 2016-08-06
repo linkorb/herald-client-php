@@ -171,6 +171,92 @@ class Client implements MessageSenderInterface
         return $message;
     }
 
+    // -----------------------------------------------------------
+    
+    private function doQuery($method, $url, $data = null)
+    {
+        $guzzleclient = new GuzzleClient();
+
+        if(stristr($method, 'get') !== false) {
+            $res = $guzzleclient->get($this->baseUrl.'/'.$url, [
+                'auth' => [$this->username, $this->password],
+            ]);
+        } else {
+            $res = $guzzleclient->post($this->baseUrl.'/'.$url, [
+                'auth' => [$this->username, $this->password],
+                'json' => $data,
+            ]);
+        }
+        
+        return json_decode($res->getBody(), true);
+    }
+
+    public function getLists()
+    {
+        return $this->doQuery('GET', 'list') ;
+    }
+    
+    public function getContacts($listId)
+    {
+        return $this->doQuery('GET', 'list/'.$listId) ;
+    }
+    
+    public function getListFields($listId)
+    {
+        return $this->doQuery('GET', 'list/'.$listId.'/list_field') ;
+    }
+
+    public function getSegments($listId)
+    {
+        return $this->doQuery('GET', 'list/'.$listId.'/segment') ;
+    }
+
+    public function viewContact($contactId)
+    {
+        return $this->doQuery('GET', 'contact/'.$contactId) ;
+    }
+
+    public function deleteContact($contactId)
+    {
+        return $this->doQuery('GET', 'contact/'.$contactId.'/delete') ;
+    }
+
+    public function addContact($listId, $address)
+    {
+        return $this->doQuery('POST', 'contact/add', [
+            'listId' => $listId, 
+            'address' => $address
+        ]);
+    }
+    
+    public function getContactProperties($contactId)
+    {
+        return $this->doQuery('GET', 'contact/'.$contactId.'/contact_property') ;
+    }
+
+    public function deleteProperty($propertyId)
+    {
+        return $this->doQuery('GET', 'contact_property/'.$propertyId.'/delete') ;
+    }
+
+    public function addProperty($contactId, $listFieldId, $value)
+    {
+        return $this->doQuery('POST', 'contact_property/add', [
+            'listFieldId' => $listFieldId, 
+            'contactId' => $contactId,
+            'value' => $value,
+        ]) ;
+    }
+    
+    public function sendList($listId, $segmentId, $messageTemplateId)
+    {
+        return $this->doQuery('POST', 'send/'.$listId, [
+            'segmentId' => $segmentId, 
+            'messageTemplateId' => $messageTemplateId,
+        ]) ;
+    }
+    
+    // -----------------------------------------------------------
     private function arrayToMessage($m)
     {
         $message = new Message();
