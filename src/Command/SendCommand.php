@@ -9,31 +9,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Herald\Client\Client as HeraldClient;
 use Herald\Client\Message;
 
-class SendCommand extends Command
+class SendCommand extends CommonCommand
 {
     protected function configure()
     {
+        parent::configure();
         $this
             ->setName('message:send')
             ->setDescription('Send a message through Herald')
-            ->addOption(
-                'username',
-                null,
-                InputOption::VALUE_REQUIRED,
-                'Username for the herald server'
-            )
-            ->addOption(
-                'password',
-                null,
-                InputOption::VALUE_REQUIRED,
-                'Password for the herald server'
-            )
-            ->addOption(
-                'apiurl',
-                null,
-                InputOption::VALUE_REQUIRED,
-                'API URL of the herald server'
-            )
             ->addOption(
                 'transportaccount',
                 null,
@@ -67,6 +50,8 @@ class SendCommand extends Command
             $input->getOption('username'),
             $input->getOption('password'),
             $input->getOption('apiurl'),
+            $input->getOption('account'),
+            $input->getOption('library'),
             $input->getOption('transportaccount')
         );
 
