@@ -172,7 +172,7 @@ class Client implements MessageSenderInterface
     }
 
     // -----------------------------------------------------------
-    
+
     private function doQuery($method, $url, $data = null)
     {
         $guzzleclient = new GuzzleClient();
@@ -187,7 +187,7 @@ class Client implements MessageSenderInterface
                 'json' => $data,
             ]);
         }
-        
+
         return json_decode($res->getBody(), true);
     }
 
@@ -195,12 +195,12 @@ class Client implements MessageSenderInterface
     {
         return $this->doQuery('GET', 'list') ;
     }
-    
+
     public function getContacts($listId)
     {
         return $this->doQuery('GET', 'list/'.$listId) ;
     }
-    
+
     public function getListFields($listId)
     {
         return $this->doQuery('GET', 'list/'.$listId.'/list_field') ;
@@ -224,11 +224,11 @@ class Client implements MessageSenderInterface
     public function addContact($listId, $address)
     {
         return $this->doQuery('POST', 'contact/add', [
-            'listId' => $listId, 
+            'listId' => $listId,
             'address' => $address
         ]);
     }
-    
+
     public function getContactProperties($contactId)
     {
         return $this->doQuery('GET', 'contact/'.$contactId.'/contact_property') ;
@@ -242,20 +242,20 @@ class Client implements MessageSenderInterface
     public function addProperty($contactId, $listFieldId, $value)
     {
         return $this->doQuery('POST', 'contact_property/add', [
-            'listFieldId' => $listFieldId, 
+            'listFieldId' => $listFieldId,
             'contactId' => $contactId,
             'value' => $value,
         ]) ;
     }
-    
+
     public function sendList($listId, $segmentId, $messageTemplateId)
     {
         return $this->doQuery('POST', 'send/'.$listId, [
-            'segmentId' => $segmentId, 
+            'segmentId' => $segmentId,
             'messageTemplateId' => $messageTemplateId,
         ]) ;
     }
-    
+
     // -----------------------------------------------------------
     private function arrayToMessage($m)
     {
