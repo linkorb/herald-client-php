@@ -223,10 +223,7 @@ class Client implements MessageSenderInterface
 
     public function addContact($listId, $address)
     {
-        return $this->doQuery('POST', 'contact/add', [
-            'listId' => $listId,
-            'address' => $address
-        ]);
+        return $this->doQuery('GET', 'contact/add/' . $listId . '/' . $address, []);
     }
 
     public function getContactProperties($contactId)
