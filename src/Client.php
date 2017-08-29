@@ -57,7 +57,7 @@ class Client implements MessageSenderInterface
             'body' => $message->serializeData(),
         ]);
 
-        return ($res->getStatusCode() == 200);
+        return $res->getStatusCode() == 200;
     }
 
     public function preview(MessageInterface $message, $skipNamePrefix = false)
@@ -177,7 +177,7 @@ class Client implements MessageSenderInterface
     {
         $guzzleclient = new GuzzleClient();
 
-        if(stristr($method, 'get') !== false) {
+        if (stristr($method, 'get') !== false) {
             $res = $guzzleclient->get($this->baseUrl.'/'.$url, [
                 'auth' => [$this->username, $this->password],
             ]);
@@ -193,47 +193,47 @@ class Client implements MessageSenderInterface
 
     public function getLists()
     {
-        return $this->doQuery('GET', 'list') ;
+        return $this->doQuery('GET', 'list');
     }
 
     public function getContacts($listId)
     {
-        return $this->doQuery('GET', 'list/'.$listId) ;
+        return $this->doQuery('GET', 'list/'.$listId);
     }
 
     public function getListFields($listId)
     {
-        return $this->doQuery('GET', 'list/'.$listId.'/list_field') ;
+        return $this->doQuery('GET', 'list/'.$listId.'/list_field');
     }
 
     public function getSegments($listId)
     {
-        return $this->doQuery('GET', 'list/'.$listId.'/segment') ;
+        return $this->doQuery('GET', 'list/'.$listId.'/segment');
     }
 
     public function viewContact($contactId)
     {
-        return $this->doQuery('GET', 'contact/'.$contactId) ;
+        return $this->doQuery('GET', 'contact/'.$contactId);
     }
 
     public function deleteContact($contactId)
     {
-        return $this->doQuery('GET', 'contact/'.$contactId.'/delete') ;
+        return $this->doQuery('GET', 'contact/'.$contactId.'/delete');
     }
 
     public function addContact($listId, $address)
     {
-        return $this->doQuery('GET', 'contact/add/' . $listId . '/' . $address, []);
+        return $this->doQuery('GET', 'contact/add/'.$listId.'/'.$address, []);
     }
 
     public function getContactProperties($contactId)
     {
-        return $this->doQuery('GET', 'contact/'.$contactId.'/contact_property') ;
+        return $this->doQuery('GET', 'contact/'.$contactId.'/contact_property');
     }
 
     public function deleteProperty($propertyId)
     {
-        return $this->doQuery('GET', 'contact_property/'.$propertyId.'/delete') ;
+        return $this->doQuery('GET', 'contact_property/'.$propertyId.'/delete');
     }
 
     public function addProperty($contactId, $listFieldId, $value)
@@ -242,7 +242,7 @@ class Client implements MessageSenderInterface
             'listFieldId' => $listFieldId,
             'contactId' => $contactId,
             'value' => $value,
-        ]) ;
+        ]);
     }
 
     public function sendList($listId, $segmentId, $messageTemplateId)
@@ -250,7 +250,15 @@ class Client implements MessageSenderInterface
         return $this->doQuery('POST', 'send/'.$listId, [
             'segmentId' => $segmentId,
             'messageTemplateId' => $messageTemplateId,
-        ]) ;
+        ]);
+    }
+
+    public function changeContactAddress($oldAddress, $newAddress)
+    {
+        return $this->doQuery('POST', 'contact/change', [
+            'from' => $oldAddress,
+            'to' => $newAddress,
+        ]);
     }
 
     // -----------------------------------------------------------
