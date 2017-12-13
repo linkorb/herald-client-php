@@ -57,7 +57,8 @@ class Client implements MessageSenderInterface
             'body' => $message->serializeData(),
         ]);
 
-        return 200 == $res->getStatusCode();
+        return $res->getStatusCode() == 200;
+
     }
 
     public function preview(MessageInterface $message, $skipNamePrefix = false)
@@ -177,7 +178,8 @@ class Client implements MessageSenderInterface
     {
         $guzzleclient = new GuzzleClient();
 
-        if (false !== stristr($method, 'get')) {
+        if (stristr($method, 'get') !== false) {
+
             $res = $guzzleclient->get($this->baseUrl.'/'.$url, [
                 'auth' => [$this->username, $this->password],
             ]);
@@ -194,6 +196,7 @@ class Client implements MessageSenderInterface
     public function getLists()
     {
         return $this->doQuery('GET', 'list');
+
     }
 
     public function getTemplates()
