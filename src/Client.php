@@ -58,6 +58,7 @@ class Client implements MessageSenderInterface
         ]);
 
         return $res->getStatusCode() == 200;
+
     }
 
     public function preview(MessageInterface $message, $skipNamePrefix = false)
@@ -94,7 +95,7 @@ class Client implements MessageSenderInterface
 
         $body = $res->getBody();
         if ($body) {
-            if ($body->read(2) == 'ok') {
+            if ('ok' == $body->read(2)) {
                 return true;
             }
         }
@@ -128,7 +129,7 @@ class Client implements MessageSenderInterface
 
         $body = $res->getBody();
         if ($body) {
-            if ($body->read(2) == 'ok') {
+            if ('ok' == $body->read(2)) {
                 return true;
             }
         }
@@ -158,7 +159,7 @@ class Client implements MessageSenderInterface
 
         $body = $res->getBody();
         if ($body) {
-            if ($body->read(2) == 'ok') {
+            if ('ok' == $body->read(2)) {
                 return true;
             }
         }
@@ -178,6 +179,7 @@ class Client implements MessageSenderInterface
         $guzzleclient = new GuzzleClient();
 
         if (stristr($method, 'get') !== false) {
+
             $res = $guzzleclient->get($this->baseUrl.'/'.$url, [
                 'auth' => [$this->username, $this->password],
             ]);
@@ -194,6 +196,12 @@ class Client implements MessageSenderInterface
     public function getLists()
     {
         return $this->doQuery('GET', 'list');
+
+    }
+
+    public function getTemplates()
+    {
+        return $this->doQuery('GET', 'templates');
     }
 
     public function getContacts($listId)
@@ -331,7 +339,7 @@ class Client implements MessageSenderInterface
         }
         if (is_string($addresses)) {
             // old format json string, parse to array
-            if ($addresses[0] != '[') {
+            if ('[' != $addresses[0]) {
                 // Expecting a json array, assuming single address
                 $address = new Address();
                 //todo: parse in id, uuid and type if set
