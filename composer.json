@@ -18,7 +18,7 @@
     ],
     "support": {
         "e-mail": "support@linkorb.com",
-        "issues": "https://github.com/herald-project/herald-client-php/issues"
+        "issues": "https://github.com/linkorb/herald-client-php/issues"
     },
     "require": {
         "guzzlehttp/guzzle": "^4.0|^5.0|^6.0"
