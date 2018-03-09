@@ -1,4 +1,5 @@
 vendor/*
 config.ini
 composer.phar
+.env
 example/*

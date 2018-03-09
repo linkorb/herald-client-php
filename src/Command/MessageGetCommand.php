@@ -10,10 +10,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Herald\Client\Client as HeraldClient;
 use Herald\Client\Message;
 
-class MessageGetCommand extends Command
+class MessageGetCommand extends BaseCommand
 {
     protected function configure()
     {
+        parent::configure();
         $this
             ->setName('message:get')
             ->setDescription('Get a recently sent messages from this herald account')
@@ -22,35 +23,12 @@ class MessageGetCommand extends Command
                 InputArgument::REQUIRED,
                 'ID of the message'
             )
-            ->addOption(
-                'username',
-                null,
-                InputOption::VALUE_REQUIRED,
-                'Username for the herald server'
-            )
-            ->addOption(
-                'password',
-                null,
-                InputOption::VALUE_REQUIRED,
-                'Password for the herald server'
-            )
-            ->addOption(
-                'apiurl',
-                null,
-                InputOption::VALUE_REQUIRED,
-                'API URL of the herald server'
-            )
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $c = new HeraldClient(
-            $input->getOption('username'),
-            $input->getOption('password'),
-            $input->getOption('apiurl'),
-            null
-        );
+        $c = $this->getClient($input);
         $messageId = (string) $input->getArgument('messageId');
 
         $messages = $c->getMessageById($messageId);

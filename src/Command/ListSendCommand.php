@@ -10,7 +10,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Herald\Client\Client as HeraldClient;
 use Herald\Client\Message;
 
-class ListSendCommand extends CommonCommand
+class ListSendCommand extends BaseCommand
 {
     protected function configure()
     {
@@ -18,22 +18,19 @@ class ListSendCommand extends CommonCommand
         $this
             ->setName('list:send')
             ->setDescription('Send messages to list or list segment')
-            ->addOption(
+            ->addArgument(
                 'listId',
-                null,
-                InputOption::VALUE_REQUIRED,
+                InputArgument::REQUIRED,
                 'List ID'
             )
-            ->addOption(
+            ->addArgument(
                 'templateId',
-                null,
-                InputOption::VALUE_REQUIRED,
+                InputArgument::REQUIRED,
                 'Template ID'
             )
-            ->addOption(
+            ->addArgument(
                 'segmentId',
-                null,
-                InputOption::VALUE_REQUIRED,
+                InputArgument::REQUIRED,
                 'Segment ID. Do not specify this option if you want send messages to entire list.'
             )
         ;
@@ -41,19 +38,12 @@ class ListSendCommand extends CommonCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $c = new HeraldClient(
-            $input->getOption('username'),
-            $input->getOption('password'),
-            $input->getOption('apiurl'),
-            $input->getOption('account'),
-            $input->getOption('library'),
-            null
-        );
+        $c = $this->getClient($input);
         
         $res = $c->sendList(
-            intval($input->getOption('listId')),
-            intval($input->getOption('segmentId')),
-            intval($input->getOption('templateId'))
+            intval($input->getArgument('listId')),
+            intval($input->getArgument('segmentId')),
+            intval($input->getArgument('templateId'))
         );
         print_r($res);
 

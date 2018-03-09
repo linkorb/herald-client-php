@@ -10,7 +10,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Herald\Client\Client as HeraldClient;
 use Herald\Client\Message;
 
-class ContactListCommand extends CommonCommand
+class ListContactsCommand extends BaseCommand
 {
     protected function configure()
     {
@@ -18,10 +18,9 @@ class ContactListCommand extends CommonCommand
         $this
             ->setName('list:contacts')
             ->setDescription('Show contacts in selected contact list on the Herald server')
-            ->addOption(
+            ->addArgument(
                 'listId',
-                null,
-                InputOption::VALUE_REQUIRED,
+                InputArgument::REQUIRED,
                 'List ID'
             )
         ;
@@ -29,16 +28,9 @@ class ContactListCommand extends CommonCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $c = new HeraldClient(
-            $input->getOption('username'),
-            $input->getOption('password'),
-            $input->getOption('apiurl'),
-            $input->getOption('account'),
-            $input->getOption('library'),
-            null
-        );
+        $c = $this->getClient($input);
 
-        $res = $c->getContacts(intval($input->getOption('listId')));
+        $res = $c->getContacts(intval($input->getArgument('listId')));
         print_r($res);
     }
 }
