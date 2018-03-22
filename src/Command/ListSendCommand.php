@@ -2,13 +2,10 @@
 
 namespace Herald\Client\Command;
 
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Herald\Client\Client as HeraldClient;
-use Herald\Client\Message;
 
 class ListSendCommand extends CommonCommand
 {
@@ -49,13 +46,12 @@ class ListSendCommand extends CommonCommand
             $input->getOption('library'),
             null
         );
-        
+
         $res = $c->sendList(
             intval($input->getOption('listId')),
             intval($input->getOption('segmentId')),
             intval($input->getOption('templateId'))
         );
         print_r($res);
-
     }
 }

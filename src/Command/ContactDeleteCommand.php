@@ -2,13 +2,10 @@
 
 namespace Herald\Client\Command;
 
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Herald\Client\Client as HeraldClient;
-use Herald\Client\Message;
 
 class ContactDeleteCommand extends CommonCommand
 {
@@ -38,7 +35,13 @@ class ContactDeleteCommand extends CommonCommand
             null
         );
 
-        $res = $c->deleteContact(intval($input->getOption('contactId')));
-        print_r($res);
+        $res = null;
+
+        if (!empty($input->getOption('contactId'))) {
+            $res = $c->deleteContact(intval($input->getOption('contactId')));
+            print_r($res);
+        } else {
+            $output->writeln('<error>Error: option contactId required </error>');
+        }
     }
 }

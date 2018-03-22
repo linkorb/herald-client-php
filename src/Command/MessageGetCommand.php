@@ -2,18 +2,17 @@
 
 namespace Herald\Client\Command;
 
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Herald\Client\Client as HeraldClient;
 use Herald\Client\Message;
 
-class MessageGetCommand extends Command
+class MessageGetCommand extends CommonCommand
 {
     protected function configure()
     {
+        parent::configure();
         $this
             ->setName('message:get')
             ->setDescription('Get a recently sent messages from this herald account')
@@ -21,26 +20,7 @@ class MessageGetCommand extends Command
                 'messageId',
                 InputArgument::REQUIRED,
                 'ID of the message'
-            )
-            ->addOption(
-                'username',
-                null,
-                InputOption::VALUE_REQUIRED,
-                'Username for the herald server'
-            )
-            ->addOption(
-                'password',
-                null,
-                InputOption::VALUE_REQUIRED,
-                'Password for the herald server'
-            )
-            ->addOption(
-                'apiurl',
-                null,
-                InputOption::VALUE_REQUIRED,
-                'API URL of the herald server'
-            )
-        ;
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -49,8 +29,11 @@ class MessageGetCommand extends Command
             $input->getOption('username'),
             $input->getOption('password'),
             $input->getOption('apiurl'),
+            $input->getOption('account'),
+            $input->getOption('library'),
             null
         );
+
         $messageId = (string) $input->getArgument('messageId');
 
         $messages = $c->getMessageById($messageId);

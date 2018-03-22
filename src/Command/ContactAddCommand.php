@@ -2,13 +2,10 @@
 
 namespace Herald\Client\Command;
 
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Herald\Client\Client as HeraldClient;
-use Herald\Client\Message;
 
 class ContactAddCommand extends CommonCommand
 {
@@ -43,12 +40,15 @@ class ContactAddCommand extends CommonCommand
             $input->getOption('library'),
             null
         );
-        
-        $res = $c->addContact(
-            intval($input->getOption('listId')),
-            $input->getOption('address')
-        );
-        print_r($res);
 
+        $res = null;
+
+        if (!empty($input->getOption('listId')) && !empty($input->getOption('address'))) {
+            $res = $c->addContact(
+                intval($input->getOption('listId')),
+                $input->getOption('address')
+            );
+        }
+        print_r($res);
     }
 }
