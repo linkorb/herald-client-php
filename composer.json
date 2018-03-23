@@ -18,13 +18,15 @@
     ],
     "support": {
         "e-mail": "support@linkorb.com",
-        "issues": "https://github.com/herald-project/herald-client-php/issues"
+        "issues": "https://github.com/linkorb/herald-client-php/issues"
     },
     "require": {
-        "symfony/console": "~2.4",
         "guzzlehttp/guzzle": "^4.0|^5.0|^6.0"
     },
-    "bin": ["bin/herald-client"],
+    "require-dev": {
+        "symfony/console": "^2.4|^3.0",
+        "symfony/dotenv": "^3.0"
+    },
     "autoload": {
         "psr-4": {
             "Herald\\Client\\": "src/"

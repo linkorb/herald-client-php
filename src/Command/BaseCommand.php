@@ -7,12 +7,19 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Herald\Client\Client as HeraldClient;
 
-abstract class CommonCommand extends Command
+abstract class BaseCommand extends Command
 {
     protected function configure()
     {
         $this
+            ->addOption(
+                'dsn',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'DSN for the herald server'
+            )
             ->addOption(
                 'username',
                 null,
@@ -44,5 +51,28 @@ abstract class CommonCommand extends Command
                 'Library name on the herald server'
             )
         ;
+    }
+
+    protected function getClient(InputInterface $input)
+    {
+        $dsn = null;
+        $dsn = getenv('HERALD_DSN');
+        if ($input->getOption('dsn')) {
+            $dsn = $input->getOption('dsn');
+        }
+
+        if ($dsn) {
+            $client = HeraldClient::fromDsn($dsn);
+        } else {
+            $client = new HeraldClient(
+                $input->getOption('username'),
+                $input->getOption('password'),
+                $input->getOption('apiurl'),
+                $input->getOption('account'),
+                $input->getOption('library'),
+                null
+            );
+        }
+        return $client;
     }
 }

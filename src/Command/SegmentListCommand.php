@@ -10,18 +10,18 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Herald\Client\Client as HeraldClient;
 use Herald\Client\Message;
 
-class SegmentListCommand extends CommonCommand
+class SegmentListCommand extends BaseCommand
 {
     protected function configure()
     {
         parent::configure();
         $this
-            ->setName('list:segments')
+            ->setName('segment:list')
             ->setDescription('Show segments for selected contact list')
-            ->addOption(
+            ->addArgument(
                 'listId',
                 null,
-                InputOption::VALUE_REQUIRED,
+                InputArgument::REQUIRED,
                 'List ID'
             )
         ;
@@ -29,16 +29,9 @@ class SegmentListCommand extends CommonCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $c = new HeraldClient(
-            $input->getOption('username'),
-            $input->getOption('password'),
-            $input->getOption('apiurl'),
-            $input->getOption('account'),
-            $input->getOption('library'),
-            null
-        );
+        $c = $this->getClient($input);
 
-        $res = $c->getSegments(intval($input->getOption('listId')));
+        $res = $c->getSegments(intval($input->getArgument('listId')));
         print_r($res);
     }
 }

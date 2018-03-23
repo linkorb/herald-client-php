@@ -8,7 +8,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Herald\Client\Client as HeraldClient;
 use Herald\Client\Message;
 
-class MessageGetCommand extends CommonCommand
+class MessageGetCommand extends BaseCommand
 {
     protected function configure()
     {

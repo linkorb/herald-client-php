@@ -2,12 +2,11 @@
 
 namespace Herald\Client\Command;
 
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Herald\Client\Client as HeraldClient;
 
-class ContactAddCommand extends CommonCommand
+class ContactAddCommand extends BaseCommand
 {
     protected function configure()
     {
@@ -15,16 +14,14 @@ class ContactAddCommand extends CommonCommand
         $this
             ->setName('contact:add')
             ->setDescription('Add contact to selected contact list')
-            ->addOption(
+            ->addArgument(
                 'listId',
-                null,
-                InputOption::VALUE_REQUIRED,
-                'List ID'
+                InputArgument::REQUIRED,
+                'ID of the list'
             )
-            ->addOption(
+            ->addArgument(
                 'address',
-                null,
-                InputOption::VALUE_REQUIRED,
+                InputArgument::REQUIRED,
                 'Address'
             )
         ;

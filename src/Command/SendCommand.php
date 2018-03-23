@@ -3,36 +3,35 @@
 namespace Herald\Client\Command;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Herald\Client\Client as HeraldClient;
 use Herald\Client\Message;
 
-class SendCommand extends CommonCommand
+class SendCommand extends BaseCommand
 {
     protected function configure()
     {
         parent::configure();
         $this
-            ->setName('message:send')
+            ->setName('send')
             ->setDescription('Send a message through Herald')
-            ->addOption(
-                'transportaccount',
-                null,
-                InputOption::VALUE_REQUIRED,
-                'Transport account on the herald server'
-            )
-            ->addOption(
+            // ->addArgument(
+            //     'transportaccount',
+            //     null,
+            //     InputOption::VALUE_REQUIRED,
+            //     'Transport account on the herald server'
+            // )
+            ->addArgument(
                 'template',
-                null,
-                InputOption::VALUE_REQUIRED,
+                InputArgument::REQUIRED,
                 'Template to use for this message'
             )
-            ->addOption(
+            ->addArgument(
                 'to',
-                null,
-                InputOption::VALUE_REQUIRED,
+                InputArgument::REQUIRED,
                 'To address'
             )
             ->addOption(
@@ -46,21 +45,14 @@ class SendCommand extends CommonCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $c = new HeraldClient(
-            $input->getOption('username'),
-            $input->getOption('password'),
-            $input->getOption('apiurl'),
-            $input->getOption('account'),
-            $input->getOption('library'),
-            $input->getOption('transportaccount')
-        );
+        $c = $this->getClient($input);
 
         $message = new Message();
 
-        if ($template = $input->getOption('template')) {
+        if ($template = $input->getArgument('template')) {
             $message->setTemplate($template);
         }
-        if ($toAddress = $input->getOption('to')) {
+        if ($toAddress = $input->getArgument('to')) {
             $message->setToAddress($toAddress);
         }
         if ($data = $input->getOption('data')) {

@@ -17,15 +17,51 @@ class Client implements MessageSenderInterface
     private $account;
     private $library;
 
-    public function __construct($username, $password, $apiUrl, $account, $library, $transportAccount)
-    {
+    public function __construct(
+        $username,
+        $password,
+        $apiUrl,
+        $account,
+        $library,
+        $transportAccount = null
+    ) {
         $this->username = $username;
         $this->password = $password;
         $this->apiUrl = $apiUrl;
         $this->account = $account;
         $this->library = $library;
+        if (!$transportAccount) {
+            $transportAccount = '-';
+        }
         $this->transportAccount = $transportAccount;
         $this->baseUrl = $apiUrl.'/'.$account.'/'.$library;
+    }
+
+    public static function fromDsn($dsn)
+    {
+        if (!filter_var($dsn, FILTER_VALIDATE_URL)) {
+            throw new RuntimeException('DSN is an invalid URL: '.$dsn);
+        }
+
+        $part = parse_url($dsn);
+
+        $username = $part['user'];
+        $password = $part['pass'];
+        $apiUrl = $part['scheme'].'://'.$part['host'].'/api/v2';
+        $part['path'] = trim($part['path'], '/');
+        $pathPart = explode('/', $part['path']);
+        if ((count($pathPart) < 2) || (count($pathPart) > 3)) {
+            throw new RuntimeException('Expecting url path with exactly 2 or 3 parts: '.$part['path']);
+        }
+
+        $account = $pathPart[0];
+        $library = $pathPart[1];
+        $transportAccount = null;
+        if (count($pathPart) > 2) {
+            $transportAccount = $pathPart[2];
+        }
+
+        return new self($username, $password, $apiUrl, $account, $library, $transportAccount);
     }
 
     public function setTemplateNamePrefix($prefix)
@@ -196,6 +232,11 @@ class Client implements MessageSenderInterface
         return $this->doQuery('GET', 'list');
     }
 
+    public function getTemplates()
+    {
+        return $this->doQuery('GET', 'templates');
+    }
+
     public function getContacts($listId)
     {
         return $this->doQuery('GET', 'list/'.$listId);
@@ -250,6 +291,14 @@ class Client implements MessageSenderInterface
         return $this->doQuery('POST', 'send/'.$listId, [
             'segmentId' => $segmentId,
             'messageTemplateId' => $messageTemplateId,
+        ]);
+    }
+
+    public function changeContactAddress($oldAddress, $newAddress)
+    {
+        return $this->doQuery('POST', 'contact/change', [
+            'from' => $oldAddress,
+            'to' => $newAddress,
         ]);
     }
 

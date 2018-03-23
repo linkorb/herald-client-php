@@ -2,6 +2,7 @@
 <?php
 
 use Symfony\Component\Console\Application;
+use Symfony\Component\Dotenv\Dotenv;
 
 $loader = __DIR__ . '/../vendor/autoload.php';
 
@@ -19,17 +20,20 @@ if (!file_exists($loader)) {
 
 require $loader;
 
+(new Dotenv())->load(__DIR__.'/../.env');
+
+
 $application = new Application('Herald client', '0.0.1');
 $application->setCatchExceptions(true);
 $application->add(new \Herald\Client\Command\SendCommand());
 $application->add(new \Herald\Client\Command\MessageListCommand());
 $application->add(new \Herald\Client\Command\MessageGetCommand());
-$application->add(new \Herald\Client\Command\CheckTemplateCommand());
+$application->add(new \Herald\Client\Command\TemplateExistsCommand());
 
 $application->add(new \Herald\Client\Command\ListListCommand());
 $application->add(new \Herald\Client\Command\ListFieldListCommand());
+$application->add(new \Herald\Client\Command\ListContactsCommand());
 $application->add(new \Herald\Client\Command\SegmentListCommand());
-$application->add(new \Herald\Client\Command\ContactListCommand());
 $application->add(new \Herald\Client\Command\ContactAddCommand());
 $application->add(new \Herald\Client\Command\ContactViewCommand());
 $application->add(new \Herald\Client\Command\ContactDeleteCommand());

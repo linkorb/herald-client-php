@@ -10,27 +10,31 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Herald\Client\Client as HeraldClient;
 use Herald\Client\Message;
 
-class ListFieldListCommand extends BaseCommand
+class TemplateExistsCommand extends BaseCommand
 {
     protected function configure()
     {
-        parent::configure();
+
         $this
-            ->setName('list:fields')
-            ->setDescription('Show list_fields for selected contact list')
+            ->setName('template:exists')
+            ->setDescription('Check if a message template exists on the Herald server')
             ->addArgument(
-                'listId',
+                'template',
                 InputArgument::REQUIRED,
-                'List ID'
+                'Name of the template'
             )
         ;
+        parent::configure();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $c = $this->getClient($input);
+        $client = $this->getClient($input);
 
-        $res = $c->getListFields(intval($input->getArgument('listId')));
-        print_r($res);
+        if ($client->templateExists($input->getArgument('template'))) {
+            $output->writeln('<info>Exists</info>');
+        } else {
+            $output->writeln('<error>Not found</error>');
+        }
     }
 }
