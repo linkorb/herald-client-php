@@ -65,25 +65,6 @@ class Client implements MessageSenderInterface
         return new self($username, $password, $apiUrl, $account, $library, $transportAccount);
     }
 
-    /*
-    public function setTemplateNamePrefix($prefix)
-    {
-        $this->templateNamePrefix = $prefix;
-
-        return $this;
-    }
-    */
-
-    /*
-    public function setToAddressOverride($address)
-    {
-        $this->toAddressOverride = $address;
-
-        return $this;
-    }
-    */
-
-    // USE
     public function send(MessageInterface $message, $skipNamePrefix = false)
     {
         $guzzleclient = new GuzzleClient();
@@ -102,32 +83,6 @@ class Client implements MessageSenderInterface
         return 200 == $res->getStatusCode();
     }
 
-    /*
-    public function preview(MessageInterface $message, $skipNamePrefix = false)
-    {
-        $guzzleclient = new GuzzleClient();
-
-        $url = $this->baseUrl.'/preview/';
-        $url .= $this->patchTemplateName($message->getTemplate(), $skipNamePrefix);
-        $url .= '?to='.$message->getToAddress();
-
-        $res = $guzzleclient->post($url, [
-            'auth' => [$this->username, $this->password],
-            'headers' => ['content-type' => 'application/json'],
-            'body' => $message->serializeData(true),
-        ]);
-
-        return json_decode($res->getBody());
-    }
-    */
-    /*
-    public function checkTemplate($templateName)
-    {
-        return $this->templateExists($templateName);
-    }
-    */
-
-    // USE
     public function templateExists($templateName, $skipNamePrefix = false)
     {
         $guzzleclient = new GuzzleClient();
@@ -147,7 +102,6 @@ class Client implements MessageSenderInterface
         return false;
     }
 
-    // USE
     private function patchTemplateName($templateName, $skipNamePrefix = false)
     {
         if ($skipNamePrefix) {
@@ -157,13 +111,11 @@ class Client implements MessageSenderInterface
         }
     }
 
-    // USE
     private function escapeTemplateName($templateName)
     {
         return str_replace('/', '___', $templateName);
     }
 
-    // USE
     public function getMessages()
     {
         $guzzleclient = new GuzzleClient();
@@ -199,7 +151,6 @@ class Client implements MessageSenderInterface
         return $data;
     }
 
-    // USE
     public function getMessageById($messageId)
     {
         $guzzleclient = new GuzzleClient();
@@ -246,73 +197,46 @@ class Client implements MessageSenderInterface
         return json_decode($res->getBody(), true);
     }
 
-    // USE
     public function getLists()
     {
         return $this->doQuery('GET', 'list');
     }
 
-    /*
-    public function getTemplates()
-    {
-        return $this->doQuery('GET', 'templates');
-    }
-    */
-
-    // USE
     public function getContacts($listId)
     {
         return $this->doQuery('GET', 'list/'.$listId);
     }
 
-    /*
-    public function getListFields($listId)
-    {
-        return $this->doQuery('GET', 'list/'.$listId.'/list_field');
-    }
-    */
-    // USE
     public function getListConditions($listId)
     {
         return $this->doQuery('GET', 'list/'.$listId.'/conditions');
     }
 
-    // public function getSegments($listId)
-    // {
-    //     return $this->doQuery('GET', 'list/'.$listId.'/segment');
-    // }
-
-    // USE
     public function viewContact($contactId)
     {
         return $this->doQuery('GET', 'contact/'.$contactId);
     }
 
-    // USE
     public function deleteContact($contactId)
     {
         return $this->doQuery('GET', 'contact/'.$contactId.'/delete');
     }
 
-    // USE
     public function addContact($listId, $address)
     {
         return $this->doQuery('GET', 'contact/add/'.$listId.'/'.$address, []);
     }
 
-    // USE
     public function getContactProperties($contactId)
     {
         return $this->doQuery('GET', 'contact/'.$contactId.'/contact_property');
     }
 
-    // USE
     public function deleteProperty($propertyId)
     {
         return $this->doQuery('GET', 'contact_property/'.$propertyId.'/delete');
     }
 
-    // USe
     public function addProperty($contactId, $fieldId, $value)
     {
         return $this->doQuery('POST', 'contact_property/add', [
@@ -321,16 +245,6 @@ class Client implements MessageSenderInterface
             'value' => $value,
         ]);
     }
-
-    /*
-    public function changeContactAddress($oldAddress, $newAddress)
-    {
-        return $this->doQuery('POST', 'contact/change', [
-            'from' => $oldAddress,
-            'to' => $newAddress,
-        ]);
-    }
-    */
 
     //---------------------------- -----------------------------
     // ------------ Message convert to Object-------------------
