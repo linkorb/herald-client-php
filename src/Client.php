@@ -342,4 +342,30 @@ class Client implements MessageSenderInterface
 
         return $res;
     }
+
+    public function setTemplateNamePrefix($prefix)
+    {
+        $this->templateNamePrefix = $prefix;
+        return $this;
+    }
+
+    public function setToAddressOverride($address)
+    {
+        $this->toAddressOverride = $address;
+
+        return $this;
+    }
+
+    public function getTemplates()
+    {
+        return $this->doQuery('GET', 'templates');
+    }
+
+    public function changeContactAddress($oldAddress, $newAddress)
+    {
+        return $this->doQuery('POST', 'contact/change', [
+            'from' => $oldAddress,
+            'to' => $newAddress,
+        ]);
+    }
 }
