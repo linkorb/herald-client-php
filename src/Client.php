@@ -24,15 +24,14 @@ class Client implements MessageSenderInterface
         $account,
         $library,
         $transportAccount = null
-    )
-    {
+    ) {
         $this->username = $username;
         $this->password = $password;
         $this->apiUrl = $apiUrl;
         $this->account = $account;
         $this->library = $library;
         if (!$transportAccount) {
-            $transportAccount = "-";
+            $transportAccount = '-';
         }
         $this->transportAccount = $transportAccount;
         $this->baseUrl = $apiUrl.'/'.$account.'/'.$library;
@@ -41,44 +40,50 @@ class Client implements MessageSenderInterface
     public static function fromDsn($dsn)
     {
         if (!filter_var($dsn, FILTER_VALIDATE_URL)) {
-            throw new RuntimeException("DSN is an invalid URL: " . $dsn);
+            throw new RuntimeException('DSN is an invalid URL: '.$dsn);
         }
 
         $part = parse_url($dsn);
+        $port = $part['port'] ? ':'.$part['port'] : '';
 
         $username = $part['user'];
         $password = $part['pass'];
-        $apiUrl = $part['scheme'] . '://' . $part['host'] . '/api/v2';
+        $apiUrl = $part['scheme'].'://'.$part['host'].$port.'/api/v2';
         $part['path'] = trim($part['path'], '/');
         $pathPart = explode('/', $part['path']);
-        if ((count($pathPart)<2) || (count($pathPart)>3)) {
-            throw new RuntimeException("Expecting url path with exactly 2 or 3 parts: " . $part['path']);
+        if ((count($pathPart) < 2) || (count($pathPart) > 3)) {
+            throw new RuntimeException('Expecting url path with exactly 2 or 3 parts: '.$part['path']);
         }
 
         $account = $pathPart[0];
         $library = $pathPart[1];
         $transportAccount = null;
-        if (count($pathPart)>2) {
+        if (count($pathPart) > 2) {
             $transportAccount = $pathPart[2];
         }
 
         return new self($username, $password, $apiUrl, $account, $library, $transportAccount);
     }
 
+    /*
     public function setTemplateNamePrefix($prefix)
     {
         $this->templateNamePrefix = $prefix;
 
         return $this;
     }
+    */
 
+    /*
     public function setToAddressOverride($address)
     {
         $this->toAddressOverride = $address;
 
         return $this;
     }
+    */
 
+    // USE
     public function send(MessageInterface $message, $skipNamePrefix = false)
     {
         $guzzleclient = new GuzzleClient();
@@ -94,10 +99,10 @@ class Client implements MessageSenderInterface
             'body' => $message->serializeData(),
         ]);
 
-        return $res->getStatusCode() == 200;
-
+        return 200 == $res->getStatusCode();
     }
 
+    /*
     public function preview(MessageInterface $message, $skipNamePrefix = false)
     {
         $guzzleclient = new GuzzleClient();
@@ -114,12 +119,15 @@ class Client implements MessageSenderInterface
 
         return json_decode($res->getBody());
     }
-
+    */
+    /*
     public function checkTemplate($templateName)
     {
         return $this->templateExists($templateName);
     }
+    */
 
+    // USE
     public function templateExists($templateName, $skipNamePrefix = false)
     {
         $guzzleclient = new GuzzleClient();
@@ -130,16 +138,16 @@ class Client implements MessageSenderInterface
             'auth' => [$this->username, $this->password],
         ]);
 
-        $body = $res->getBody();
-        if ($body) {
-            if ('ok' == $body->read(2)) {
-                return true;
-            }
+        $body = json_decode($res->getBody());
+
+        if ('OK' == strtoupper($body->code)) {
+            return true;
         }
 
         return false;
     }
 
+    // USE
     private function patchTemplateName($templateName, $skipNamePrefix = false)
     {
         if ($skipNamePrefix) {
@@ -149,11 +157,13 @@ class Client implements MessageSenderInterface
         }
     }
 
+    // USE
     private function escapeTemplateName($templateName)
     {
         return str_replace('/', '___', $templateName);
     }
 
+    // USE
     public function getMessages()
     {
         $guzzleclient = new GuzzleClient();
@@ -174,6 +184,9 @@ class Client implements MessageSenderInterface
         $data = json_decode($content, true);
         //print_r($data);
 
+        /*
+        // This return object //
+
         $messages = array();
 
         foreach ($data['items'] as $m) {
@@ -182,8 +195,11 @@ class Client implements MessageSenderInterface
         }
 
         return $messages;
+        */
+        return $data;
     }
 
+    // USE
     public function getMessageById($messageId)
     {
         $guzzleclient = new GuzzleClient();
@@ -202,11 +218,12 @@ class Client implements MessageSenderInterface
         }
         $content = (string) $body;
         $data = json_decode($content, true);
-        //print_r($data);
 
-        $message = $this->arrayToMessage($data);
+        // This return object //
+        // $message = $this->arrayToMessage($data);
+        // return $message;
 
-        return $message;
+        return $data;
     }
 
     // -----------------------------------------------------------
@@ -215,8 +232,7 @@ class Client implements MessageSenderInterface
     {
         $guzzleclient = new GuzzleClient();
 
-        if (stristr($method, 'get') !== false) {
-
+        if (false !== stristr($method, 'get')) {
             $res = $guzzleclient->get($this->baseUrl.'/'.$url, [
                 'auth' => [$this->username, $this->password],
             ]);
@@ -230,74 +246,83 @@ class Client implements MessageSenderInterface
         return json_decode($res->getBody(), true);
     }
 
+    // USE
     public function getLists()
     {
         return $this->doQuery('GET', 'list');
-
     }
 
+    /*
     public function getTemplates()
     {
         return $this->doQuery('GET', 'templates');
     }
+    */
 
+    // USE
     public function getContacts($listId)
     {
         return $this->doQuery('GET', 'list/'.$listId);
     }
 
+    /*
     public function getListFields($listId)
     {
         return $this->doQuery('GET', 'list/'.$listId.'/list_field');
     }
-
-    public function getSegments($listId)
+    */
+    // USE
+    public function getListConditions($listId)
     {
-        return $this->doQuery('GET', 'list/'.$listId.'/segment');
+        return $this->doQuery('GET', 'list/'.$listId.'/conditions');
     }
 
+    // public function getSegments($listId)
+    // {
+    //     return $this->doQuery('GET', 'list/'.$listId.'/segment');
+    // }
+
+    // USE
     public function viewContact($contactId)
     {
         return $this->doQuery('GET', 'contact/'.$contactId);
     }
 
+    // USE
     public function deleteContact($contactId)
     {
         return $this->doQuery('GET', 'contact/'.$contactId.'/delete');
     }
 
+    // USE
     public function addContact($listId, $address)
     {
         return $this->doQuery('GET', 'contact/add/'.$listId.'/'.$address, []);
     }
 
+    // USE
     public function getContactProperties($contactId)
     {
         return $this->doQuery('GET', 'contact/'.$contactId.'/contact_property');
     }
 
+    // USE
     public function deleteProperty($propertyId)
     {
         return $this->doQuery('GET', 'contact_property/'.$propertyId.'/delete');
     }
 
-    public function addProperty($contactId, $listFieldId, $value)
+    // USe
+    public function addProperty($contactId, $fieldId, $value)
     {
         return $this->doQuery('POST', 'contact_property/add', [
-            'listFieldId' => $listFieldId,
+            'fieldId' => $fieldId,
             'contactId' => $contactId,
             'value' => $value,
         ]);
     }
 
-    public function sendList($listId, $segmentId, $messageTemplateId)
-    {
-        return $this->doQuery('POST', 'send/'.$listId, [
-            'segmentId' => $segmentId,
-            'messageTemplateId' => $messageTemplateId,
-        ]);
-    }
-
+    /*
     public function changeContactAddress($oldAddress, $newAddress)
     {
         return $this->doQuery('POST', 'contact/change', [
@@ -305,8 +330,10 @@ class Client implements MessageSenderInterface
             'to' => $newAddress,
         ]);
     }
+    */
 
-    // -----------------------------------------------------------
+    //---------------------------- -----------------------------
+    // ------------ Message convert to Object-------------------
     private function arrayToMessage($m)
     {
         $message = new Message();

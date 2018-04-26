@@ -4,24 +4,23 @@
 use Symfony\Component\Console\Application;
 use Symfony\Component\Dotenv\Dotenv;
 
-$loader = __DIR__ . '/../vendor/autoload.php';
+$loader = __DIR__.'/../vendor/autoload.php';
 
 if (!file_exists($loader)) {
-    $loader = __DIR__ . '/../../../autoload.php';
+    $loader = __DIR__.'/../../../autoload.php';
 }
 
 if (!file_exists($loader)) {
     die(
-        'You must set up the project dependencies, run the following commands:' . PHP_EOL .
-        'curl -s http://getcomposer.org/installer | php' . PHP_EOL .
-        'php composer.phar install' . PHP_EOL
+        'You must set up the project dependencies, run the following commands:'.PHP_EOL.
+        'curl -s http://getcomposer.org/installer | php'.PHP_EOL.
+        'php composer.phar install'.PHP_EOL
     );
 }
 
 require $loader;
 
 (new Dotenv())->load(__DIR__.'/../.env');
-
 
 $application = new Application('Herald client', '0.0.1');
 $application->setCatchExceptions(true);
@@ -31,9 +30,9 @@ $application->add(new \Herald\Client\Command\MessageGetCommand());
 $application->add(new \Herald\Client\Command\TemplateExistsCommand());
 
 $application->add(new \Herald\Client\Command\ListListCommand());
-$application->add(new \Herald\Client\Command\ListFieldListCommand());
+$application->add(new \Herald\Client\Command\ListConditionsCommand());
 $application->add(new \Herald\Client\Command\ListContactsCommand());
-$application->add(new \Herald\Client\Command\SegmentListCommand());
+
 $application->add(new \Herald\Client\Command\ContactAddCommand());
 $application->add(new \Herald\Client\Command\ContactViewCommand());
 $application->add(new \Herald\Client\Command\ContactDeleteCommand());
@@ -41,6 +40,6 @@ $application->add(new \Herald\Client\Command\ContactPropertiesCommand());
 
 $application->add(new \Herald\Client\Command\PropertyAddCommand());
 $application->add(new \Herald\Client\Command\PropertyDeleteCommand());
-$application->add(new \Herald\Client\Command\ListSendCommand());
 
 $application->run();
+?>

@@ -2,13 +2,9 @@
 
 namespace Herald\Client\Command;
 
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Herald\Client\Client as HeraldClient;
-use Herald\Client\Message;
 
 class PropertyAddCommand extends BaseCommand
 {
@@ -24,9 +20,9 @@ class PropertyAddCommand extends BaseCommand
                 'Contact ID'
             )
             ->addArgument(
-                'listFieldId',
+                'FieldId',
                 InputArgument::REQUIRED,
-                'List field ID'
+                'Field ID'
             )
             ->addArgument(
                 'value',
@@ -39,13 +35,12 @@ class PropertyAddCommand extends BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $c = $this->getClient($input);
-        
+
         $res = $c->addProperty(
             intval($input->getArgument('contactId')),
-            intval($input->getArgument('listFieldId')),
+            intval($input->getArgument('FieldId')),
             $input->getArgument('value')
         );
         print_r($res);
-
     }
 }
