@@ -14,6 +14,11 @@
             "name": "Joost Faassen",
             "email": "j.faassen@onatal.nl",
             "role": "Developer"
+        },
+        {
+          "name": "Kaushik Prajapati",
+          "email": "prajapatikaushik@gmail.com",
+          "role": "Developer"  
         }
     ],
     "support": {
@@ -21,11 +26,12 @@
         "issues": "https://github.com/linkorb/herald-client-php/issues"
     },
     "require": {
-        "guzzlehttp/guzzle": "^4.0|^5.0|^6.0"
+        "guzzlehttp/guzzle": "^4.0|^5.0|^6.0",
+        "linkorb/envoi": "^1.1"
     },
     "require-dev": {
-        "symfony/console": "^2.4|^3.0",
-        "symfony/dotenv": "^3.0"
+        "symfony/console": "^2.4|^4.0",
+        "symfony/dotenv": "^4.0|^3.0"
     },
     "autoload": {
         "psr-4": {
