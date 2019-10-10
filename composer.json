@@ -17,7 +17,8 @@
         },
         {
           "name": "Kaushik Prajapati",
-          "email": "prajapatikaushik@gmail.com"
+          "email": "prajapatikaushik@gmail.com",
+          "role": "Developer"  
         }
     ],
     "support": {
