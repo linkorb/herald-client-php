@@ -4,7 +4,7 @@ Herald PHP client
 Send beautiful messages from your application.
 
 ## Installation
-```
+```sh
 composer require herald-project/client-php
 ```
 
@@ -74,8 +74,15 @@ need to pass any options to the CLI application
 
 ### By .env
 
-The Herald CLI application loads `.env` before running any commands, allowing you to create a `.env` file 
+The Herald CLI application loads `.env` before running any commands, allowing you to create a `.env` file
 like this:
+
+```sh
+ # run comand to create file
+ cp .env.dist .env # Create config file from template/.dist file
+edit .env # Edit configuration, database settings etc
+ ./vendor/bin/envoi validate  # Run command validate based on meta file .env.yaml
+```
 
 ```ini
 HERALD_DSN=https://x:y@herald.dev/test/test/mandrill

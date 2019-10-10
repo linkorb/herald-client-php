@@ -2,7 +2,7 @@
 <?php
 
 use Symfony\Component\Console\Application;
-use Symfony\Component\Dotenv\Dotenv;
+use Envoi\Envoi;
 
 $loader = __DIR__.'/../vendor/autoload.php';
 
@@ -20,7 +20,10 @@ if (!file_exists($loader)) {
 
 require $loader;
 
-(new Dotenv())->load(__DIR__.'/../.env');
+// .env validate it.
+$envFilename = __DIR__.'/../.env';
+$envMetaFile = __DIR__.'/../.env.yaml';
+Envoi::init($envFilename, $envMetaFile);
 
 $application = new Application('Herald client', '0.0.1');
 $application->setCatchExceptions(true);
