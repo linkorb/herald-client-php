@@ -40,7 +40,7 @@ class Client implements MessageSenderInterface
     public static function fromDsn($dsn)
     {
         if (!filter_var($dsn, FILTER_VALIDATE_URL)) {
-            throw new RuntimeException('DSN is an invalid URL: '.$dsn);
+            throw new \RuntimeException('DSN is an invalid URL: '.$dsn);
         }
 
         $part = parse_url($dsn);
@@ -52,7 +52,7 @@ class Client implements MessageSenderInterface
         $part['path'] = trim($part['path'], '/');
         $pathPart = explode('/', $part['path']);
         if ((count($pathPart) < 2) || (count($pathPart) > 3)) {
-            throw new RuntimeException('Expecting url path with exactly 2 or 3 parts: '.$part['path']);
+            throw new \RuntimeException('Expecting url path with exactly 2 or 3 parts: '.$part['path']);
         }
 
         $account = $pathPart[0];
