@@ -56,7 +56,18 @@ class Client implements MessageSenderInterface
             $transportAccount = $pathPart[2];
         }
 
-        return new self($username, $password, $apiUrl, $account, $library, $transportAccount);
+        $client = new self($username, $password, $apiUrl, $account, $library, $transportAccount);
+
+        if (!empty($part['query'])) {
+            parse_str($part['query'], $query);
+            foreach ($query as $key => $value) {
+                if ('template_name_prefix' === $key) {
+                    $client->setTemplateNamePrefix($value);
+                }
+            }
+        }
+
+        return $client;
     }
 
     public function send(MessageInterface $message, $skipNamePrefix = false)
@@ -337,7 +348,7 @@ class Client implements MessageSenderInterface
         return $res;
     }
 
-    public function setTemplateNamePrefix($prefix)
+    public function setTemplateNamePrefix(string $prefix): Client
     {
         $this->templateNamePrefix = $prefix;
 
