@@ -2,10 +2,10 @@
 
 namespace Herald\Client\Command;
 
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Herald\Client\Message;
 
 class TemplateExistsCommand extends BaseCommand
 {
@@ -23,7 +23,7 @@ class TemplateExistsCommand extends BaseCommand
         parent::configure();
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $client = $this->getClient($input);
 
@@ -32,5 +32,7 @@ class TemplateExistsCommand extends BaseCommand
         } else {
             $output->writeln('<error>Not found</error>');
         }
+
+        return Command::SUCCESS;
     }
 }
