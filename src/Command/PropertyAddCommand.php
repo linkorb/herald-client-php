@@ -2,6 +2,7 @@
 
 namespace Herald\Client\Command;
 
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -32,7 +33,7 @@ class PropertyAddCommand extends BaseCommand
         ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $c = $this->getClient($input);
 
@@ -42,5 +43,7 @@ class PropertyAddCommand extends BaseCommand
             $input->getArgument('value')
         );
         print_r($res);
+
+        return Command::SUCCESS;
     }
 }

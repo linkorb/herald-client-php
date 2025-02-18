@@ -130,6 +130,8 @@ class Template
         return $this;
     }
 
+    private $subject;
+
     public function getSubject()
     {
         return $this->subject;
@@ -141,6 +143,8 @@ class Template
 
         return $this;
     }
+
+    private $body;
 
     public function getBody()
     {

@@ -7,15 +7,12 @@ use GuzzleHttp\Client as GuzzleClient;
 
 class Client implements MessageSenderInterface
 {
-    private $apiUrl;
     private $baseUrl;
     private $username;
     private $password;
     private $transportAccount;
     private $templateNamePrefix = '';
     private $toAddressOverride = null;
-    private $account;
-    private $library;
 
     public function __construct(
         $username,
@@ -27,9 +24,6 @@ class Client implements MessageSenderInterface
     ) {
         $this->username = $username;
         $this->password = $password;
-        $this->apiUrl = $apiUrl;
-        $this->account = $account;
-        $this->library = $library;
         if (!$transportAccount) {
             $transportAccount = '-';
         }
@@ -37,7 +31,7 @@ class Client implements MessageSenderInterface
         $this->baseUrl = $apiUrl.'/'.$account.'/'.$library;
     }
 
-    public static function fromDsn($dsn)
+    public static function fromDsn($dsn): Client
     {
         if (!filter_var($dsn, FILTER_VALIDATE_URL)) {
             throw new \RuntimeException('DSN is an invalid URL: '.$dsn);
@@ -62,7 +56,18 @@ class Client implements MessageSenderInterface
             $transportAccount = $pathPart[2];
         }
 
-        return new self($username, $password, $apiUrl, $account, $library, $transportAccount);
+        $client = new self($username, $password, $apiUrl, $account, $library, $transportAccount);
+
+        if (!empty($part['query'])) {
+            parse_str($part['query'], $query);
+            foreach ($query as $key => $value) {
+                if ('template_name_prefix' === $key) {
+                    $client->setTemplateNamePrefix($value);
+                }
+            }
+        }
+
+        return $client;
     }
 
     public function send(MessageInterface $message, $skipNamePrefix = false)
@@ -343,7 +348,7 @@ class Client implements MessageSenderInterface
         return $res;
     }
 
-    public function setTemplateNamePrefix($prefix)
+    public function setTemplateNamePrefix(string $prefix): Client
     {
         $this->templateNamePrefix = $prefix;
 

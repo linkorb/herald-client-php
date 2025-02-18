@@ -2,9 +2,9 @@
 
 namespace Herald\Client\Command;
 
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Herald\Client\Client as HeraldClient;
 
 class ListListCommand extends BaseCommand
 {
@@ -17,11 +17,13 @@ class ListListCommand extends BaseCommand
         ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $c = $this->getClient($input);
 
         $contacts = $c->getLists();
         print_r($contacts);
+
+        return Command::SUCCESS;
     }
 }
