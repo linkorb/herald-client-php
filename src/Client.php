@@ -12,7 +12,7 @@ class Client implements MessageSenderInterface
     private $password;
     private $transportAccount;
     private $templateNamePrefix = '';
-    private $toAddressOverride = null;
+    private $toAddressOverride;
 
     public function __construct(
         $username,
@@ -20,7 +20,7 @@ class Client implements MessageSenderInterface
         $apiUrl,
         $account,
         $library,
-        $transportAccount = null
+        $transportAccount = null,
     ) {
         $this->username = $username;
         $this->password = $password;
@@ -38,7 +38,7 @@ class Client implements MessageSenderInterface
         }
 
         $part = parse_url($dsn);
-        $port = $part['port'] ? ':'.$part['port'] : '';
+        $port = isset($part['port']) ? ':'.$part['port'] : '';
 
         $username = $part['user'];
         $password = $part['pass'];
@@ -139,7 +139,7 @@ class Client implements MessageSenderInterface
         }
         $content = (string) $body;
         $data = json_decode($content, true);
-        //print_r($data);
+        // print_r($data);
 
         /*
         // This return object //
@@ -251,7 +251,7 @@ class Client implements MessageSenderInterface
         ]);
     }
 
-    //---------------------------- -----------------------------
+    // ---------------------------- -----------------------------
     // ------------ Message convert to Object-------------------
     private function arrayToMessage($m)
     {
@@ -279,7 +279,7 @@ class Client implements MessageSenderInterface
             $t = $m['template'];
             $template = new Template();
             $template->setId($t['id']);
-            //$template->setUuid($m['template']['uuid']);
+            // $template->setUuid($m['template']['uuid']);
             $template->setCode($t['code']);
             $template->setUser($t['user']);
             $template->setStatus($t['status']);
@@ -318,27 +318,27 @@ class Client implements MessageSenderInterface
     private function parseAddresses($addresses)
     {
         if (!$addresses) {
-            return array();
+            return [];
         }
         if (is_string($addresses)) {
             // old format json string, parse to array
             if ('[' != $addresses[0]) {
                 // Expecting a json array, assuming single address
                 $address = new Address();
-                //todo: parse in id, uuid and type if set
+                // todo: parse in id, uuid and type if set
                 $address->setIdentifier($addresses);
                 $address->setName('');
                 $address->setType('email');
 
-                return array($address);
+                return [$address];
             }
             $addresses = json_decode($addresses, true);
         }
 
-        $res = array();
+        $res = [];
         foreach ($addresses as $a) {
             $address = new Address();
-            //todo: parse in id, uuid and type if set
+            // todo: parse in id, uuid and type if set
             $address->setIdentifier($a['identifier']);
             $address->setName($a['name']);
             $address->setType('email');
