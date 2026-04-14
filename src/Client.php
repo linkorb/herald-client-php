@@ -100,7 +100,7 @@ class Client implements MessageSenderInterface
 
         $body = json_decode($res->getBody());
 
-        if ($body && 'OK' == strtoupper($body->code)) {            
+        if ($body && 'OK' == strtoupper($body->code)) {
             return true;
         }
         return false;
