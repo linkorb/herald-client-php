@@ -20,7 +20,7 @@ class Client implements MessageSenderInterface
         $apiUrl,
         $account,
         $library,
-        $transportAccount = null,
+        $transportAccount = null
     ) {
         $this->username = $username;
         $this->password = $password;
